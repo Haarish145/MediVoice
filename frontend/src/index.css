@@ -1,3 +1,7 @@
+/* =====================================================
+   MEDIVOICE — MOBILE-FIRST DESIGN SYSTEM
+   ===================================================== */
+
 :root {
   --primary-color: #005691;
   --primary-hover: #00406c;
@@ -7,11 +11,11 @@
   --text-main: #1f2937;
   --text-muted: #6b7280;
   --border-color: #e5e7eb;
-  
+
   --danger-bg: #fef2f2;
   --danger-border: #fca5a5;
   --danger-text: #991b1b;
-  
+
   --warning-bg: #fffbe6;
   --warning-border: #ffe58f;
   --warning-text: #873800;
@@ -19,17 +23,18 @@
   --success-bg: #f6ffed;
   --success-border: #b7eb8f;
   --success-text: #135200;
-  
+
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --radius: 8px;
+  --radius: 10px;
+  --radius-sm: 6px;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
+  --header-height: 56px;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ─── Reset ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: var(--font-family);
@@ -37,51 +42,90 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Layout Header */
+/* ─── App Header ─────────────────────────────────────── */
 .app-header {
   background-color: var(--primary-color);
   color: #ffffff;
-  padding: 1rem 1.5rem;
+  height: var(--header-height);
+  padding: 0 0.85rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 0.5rem;
 }
 
 .brand-title {
-  font-size: 1.35rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
+
+.brand-icon { font-size: 1.2rem; }
 
 .team-badge {
-  font-size: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 0.2rem 0.6rem;
-  border-radius: 12px;
+  font-size: 0.62rem;
+  background-color: rgba(255,255,255,0.18);
+  padding: 0.15rem 0.45rem;
+  border-radius: 10px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
+/* Responsive tab label switching */
+.tab-label-short { display: none; }
+.tab-label-full  { display: inline; }
+
+@media (max-width: 640px) {
+  .tab-label-short { display: inline; }
+  .tab-label-full  { display: none; }
+  .team-badge      { display: none; }
+  .brand-title     { font-size: 1.02rem; }
+}
+
+@media (max-width: 380px) {
+  .app-header      { padding: 0 0.5rem; gap: 0.35rem; }
+  .brand-title     { font-size: 0.92rem; }
+  .nav-tabs        { gap: 0.25rem; }
+  .nav-tab         { font-size: 0.74rem; padding: 0.25rem 0.45rem; min-height: 32px; }
+}
+
+/* ─── Navigation Tabs ────────────────────────────────── */
 .nav-tabs {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  flex-shrink: 0;
 }
 
 .nav-tab {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 0.4rem 0.9rem;
-  border-radius: var(--radius);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.92);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.nav-tab:active { transform: scale(0.97); }
 
 .nav-tab.active {
   background-color: #ffffff;
@@ -89,161 +133,182 @@ body {
   border-color: #ffffff;
 }
 
-/* Main Container */
-.main-container {
-  max-width: 1200px;
-  margin: 1.5rem auto;
-  padding: 0 1rem;
+@media (max-width: 480px) {
+  .nav-tab { font-size: 0.78rem; padding: 0.3rem 0.55rem; min-height: 34px; }
 }
 
-/* Base Card */
+/* ─── Main Container ─────────────────────────────────── */
+.main-container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem 0.75rem 4rem;
+}
+
+@media (min-width: 640px) {
+  .main-container { padding: 1.25rem 1rem 3rem; }
+}
+
+/* ─── Cards ──────────────────────────────────────────── */
 .card {
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
   box-shadow: var(--shadow);
 }
 
+@media (min-width: 480px) {
+  .card { padding: 1.25rem; margin-bottom: 1.25rem; }
+}
+
+.welcome-card {
+  text-align: center;
+  padding: 1.75rem 1.15rem;
+}
+
+@media (min-width: 480px) {
+  .welcome-card { padding: 2.5rem 1.75rem; }
+}
+
+/* Microphone listening pulse */
+@keyframes mic-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.65); transform: scale(1); }
+  70% { box-shadow: 0 0 0 16px rgba(220, 38, 38, 0); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); transform: scale(1); }
+}
+
+#mic-btn.btn-danger {
+  animation: mic-pulse 1.4s infinite ease-out;
+}
+
 .card-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--primary-color);
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
   border-bottom: 2px solid #edf2f7;
   padding-bottom: 0.4rem;
 }
 
-/* Connection Status Pill */
+/* ─── Connection Status ──────────────────────────────── */
 .status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 16px;
-  font-size: 0.8rem;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 14px;
+  font-size: 0.74rem;
   font-weight: 600;
 }
 
-.status-connected {
-  background-color: #e6f4ea;
-  color: #137333;
-}
-
-.status-reconnecting {
-  background-color: #fef7e0;
-  color: #b06000;
-}
-
-.status-disconnected {
-  background-color: #fce8e6;
-  color: #c5221f;
-}
+.status-connected    { background-color: #e6f4ea; color: #137333; }
+.status-reconnecting { background-color: #fef7e0; color: #b06000; }
+.status-disconnected { background-color: #fce8e6; color: #c5221f; }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px; height: 7px;
   border-radius: 50%;
   background-color: currentColor;
 }
 
-/* Red Flag Warning Box */
+/* ─── Red Flag Box ───────────────────────────────────── */
 .red-flag-box {
   background-color: var(--danger-bg);
   border: 1px solid var(--danger-border);
   color: var(--danger-text);
-  padding: 1rem;
+  padding: 0.85rem;
   border-radius: var(--radius);
   margin-bottom: 1rem;
 }
 
 .red-flag-title {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.4rem;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
-/* Buttons */
+/* ─── Buttons ────────────────────────────────────────── */
 .btn {
-  padding: 0.6rem 1.2rem;
-  border-radius: var(--radius);
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-sm);
   border: none;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  transition: background-color 0.2s;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+  min-height: 42px;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.btn-primary {
-  background-color: var(--primary-color);
-  color: #ffffff;
-}
+.btn:active           { transform: scale(0.97); }
+.btn-primary          { background-color: var(--primary-color); color: #ffffff; }
+.btn-primary:hover    { background-color: var(--primary-hover); }
+.btn-danger           { background-color: #dc2626; color: #ffffff; }
+.btn-danger:hover     { background-color: #b91c1c; }
+.btn-secondary        { background-color: #e5e7eb; color: #374151; }
+.btn-secondary:hover  { background-color: #d1d5db; }
 
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-}
-
-.btn-danger {
-  background-color: #dc2626;
-  color: #ffffff;
-}
-
-.btn-secondary {
-  background-color: #e5e7eb;
-  color: #374151;
-}
-
-.btn-secondary:hover {
-  background-color: #d1d5db;
-}
-
-/* Grid Layouts */
+/* ─── Grid Layouts ───────────────────────────────────── */
 .grid-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
 }
 
-@media (max-width: 768px) {
-  .grid-2 {
-    grid-template-columns: 1fr;
-  }
+@media (min-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
 }
 
-/* Form controls */
+/* ─── Form Controls ──────────────────────────────────── */
 .input-field {
   width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 1rem; /* 1rem prevents iOS auto-zoom */
+  margin-bottom: 0.85rem;
+  background: #fff;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
 }
 
-/* Language Grid */
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0,86,145,0.12);
+}
+
+/* ─── Language Grid ──────────────────────────────────── */
 .language-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.6rem;
+}
+
+@media (max-width: 380px) {
+  .language-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 .language-btn {
-  padding: 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
+  padding: 0.65rem 0.5rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
   background: white;
   text-align: center;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
+  min-height: 44px;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .language-btn.selected {
@@ -253,106 +318,166 @@ body {
   font-weight: 700;
 }
 
-/* Transcript Box */
+/* ─── Transcript / Chat ──────────────────────────────── */
 .transcript-area {
   background-color: #fafafa;
   border: 1px solid #e0e0e0;
   border-radius: var(--radius);
-  padding: 1rem;
-  min-height: 140px;
-  max-height: 380px;
+  padding: 0.85rem;
+  min-height: 130px;
+  max-height: 300px;
   overflow-y: auto;
   scroll-behavior: smooth;
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
+  font-size: 0.92rem;
+  margin-bottom: 0.85rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 480px) {
+  .transcript-area { max-height: 400px; }
 }
 
 .chat-bubble {
-  padding: 0.6rem 0.9rem;
-  border-radius: 12px;
-  margin-bottom: 0.6rem;
-  max-width: 85%;
+  padding: 0.55rem 0.85rem;
+  border-radius: 14px;
+  margin-bottom: 0.55rem;
+  max-width: 88%;
+  word-break: break-word;
 }
 
-.chat-bubble.patient {
-  background-color: #e3f2fd;
-  color: #0d47a1;
-  margin-left: auto;
-}
-
-.chat-bubble.assistant {
-  background-color: #f1f8e9;
-  color: #1b5e20;
-  margin-right: auto;
-}
+.chat-bubble.patient   { background-color: #e3f2fd; color: #0d47a1; margin-left: auto; }
+.chat-bubble.assistant { background-color: #f1f8e9; color: #1b5e20; margin-right: auto; }
 
 .chat-speaker {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   margin-bottom: 0.2rem;
   text-transform: uppercase;
+  opacity: 0.7;
 }
 
-.chat-text {
-  font-size: 0.95rem;
-}
+.chat-text        { font-size: 0.92rem; line-height: 1.45; }
+.chat-translation { font-size: 0.78rem; color: #555; font-style: italic; margin-top: 0.2rem; }
 
-.chat-translation {
-  font-size: 0.8rem;
-  color: #555555;
-  font-style: italic;
-  margin-top: 0.2rem;
-}
-
-/* =========================================================
-   SCENIC BACKGROUND BACKDROPS (PATIENT & NURSE VIEWS)
-   ========================================================= */
-
-/* Patient Page Scenic Hospital Patient & Clinic Care Backdrop */
+/* ─── Scenic Backgrounds ─────────────────────────────── */
 .patient-view-container {
-  min-height: calc(100vh - 65px);
-  background: linear-gradient(135deg, rgba(235, 245, 255, 0.72) 0%, rgba(219, 234, 254, 0.78) 50%, rgba(240, 249, 255, 0.82) 100%),
-              url('/patient_bg.jpg') center center / cover no-repeat fixed;
-  padding: 1.5rem 1rem 3rem 1rem;
-  transition: all 0.3s ease;
+  min-height: calc(100vh - var(--header-height));
+  background:
+    linear-gradient(135deg, rgba(235,245,255,0.72) 0%, rgba(219,234,254,0.78) 50%, rgba(240,249,255,0.82) 100%),
+    url('/patient_bg.jpg') center center / cover no-repeat fixed;
+  padding: 1rem 0.75rem 5rem;
 }
 
-/* Nurse Station & Triage Monitoring Backdrop */
+@media (min-width: 480px) {
+  .patient-view-container { padding: 1.5rem 1rem 3rem; }
+}
+
 .nurse-view-container {
-  min-height: calc(100vh - 65px);
-  background: linear-gradient(135deg, rgba(241, 245, 249, 0.76) 0%, rgba(226, 232, 240, 0.80) 50%, rgba(248, 250, 252, 0.84) 100%),
-              url('/nurse_bg.jpg') center center / cover no-repeat fixed;
-  transition: all 0.3s ease;
+  min-height: calc(100vh - var(--header-height));
+  background:
+    linear-gradient(135deg, rgba(241,245,249,0.76) 0%, rgba(226,232,240,0.80) 50%, rgba(248,250,252,0.84) 100%),
+    url('/nurse_bg.jpg') center center / cover no-repeat fixed;
 }
 
-/* Enhanced Glassmorphism Cards for Patient & Nurse Pages */
-.patient-view-container .card {
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 10px 30px rgba(0, 86, 145, 0.10);
-  border-radius: 12px;
-}
-
+/* Glassmorphism Cards */
+.patient-view-container .card,
 .nurse-view-container .card {
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255,255,255,0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 8px 24px rgba(0,86,145,0.09);
   border-radius: 12px;
 }
 
+/* ─── Nurse Dashboard Layout ─────────────────────────── */
 .nurse-sidebar-glass {
-  background: rgba(248, 250, 252, 0.90) !important;
+  background: rgba(248,250,252,0.92) !important;
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
 }
 
 .nurse-main-glass {
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(255,255,255,0.45);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
 
+/* Desktop: sidebar + main side by side */
+@media (min-width: 769px) {
+  .nurse-desktop-layout {
+    display: flex;
+    height: calc(100vh - var(--header-height));
+    overflow: hidden;
+  }
+  .nurse-sidebar-desktop {
+    width: 300px;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(229,231,235,0.8);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  .nurse-main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+  }
+  .nurse-mobile-session-strip { display: none; }
+}
+
+/* Mobile: stacked, sessions as horizontal chips */
+@media (max-width: 768px) {
+  .nurse-desktop-layout {
+    display: block;
+    height: auto;
+  }
+  .nurse-sidebar-desktop { display: none; }
+  .nurse-main-content {
+    padding: 0.75rem;
+    overflow-y: visible;
+  }
+  .nurse-mobile-session-strip {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.6rem 0.75rem;
+    background: rgba(248,250,252,0.95);
+    border-bottom: 1px solid #e5e7eb;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nurse-mobile-session-strip::-webkit-scrollbar { display: none; }
+  .nurse-session-chip {
+    flex-shrink: 0;
+    padding: 0.4rem 0.75rem;
+    border-radius: 20px;
+    border: 1.5px solid #d1d5db;
+    background: white;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nurse-session-chip.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+  .nurse-session-chip.high {
+    border-color: #dc2626;
+    color: #dc2626;
+  }
+  .nurse-session-chip.high.active {
+    background: #dc2626;
+    color: white;
+  }
+}
+
+/* ─── Safe Area (Notched phones) ─────────────────────── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .patient-view-container {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
+}

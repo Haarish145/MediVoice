@@ -242,7 +242,7 @@ export default function PatientPage() {
   if (screen === "welcome") {
     return (
       <div className="main-container" style={{ maxWidth: "480px" }}>
-        <div className="card" style={{ textAlign: "center", padding: "2.5rem 1.5rem" }}>
+        <div className="card welcome-card">
           <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🏥</div>
           <h1 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#005691", marginBottom: "0.5rem" }}>
             MediVoice
@@ -333,7 +333,7 @@ export default function PatientPage() {
         <div style={{
           background: "white", padding: "0.8rem 1rem", borderRadius: "8px",
           border: "1px solid #e5e7eb", marginBottom: "1rem",
-          display: "flex", justifyContent: "space-between", alignItems: "center"
+          display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "0.5rem"
         }}>
           <div>
             <div style={{ fontWeight: "700", color: "#005691", fontSize: "1.05rem" }}>

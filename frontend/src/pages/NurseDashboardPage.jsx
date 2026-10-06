@@ -273,12 +273,9 @@ export default function NurseDashboardPage({ nurseInfo, onLogout }) {
   const isCompleted = activeData?.is_completed || activeTriageState?.is_completed || activeData?.status === "completed";
 
   return (
-    <div style={{ display: "flex", height: "calc(100vh - 65px)", overflow: "hidden" }}>
-      {/* Left Sidebar - Session List */}
-      <div className="nurse-sidebar-glass" style={{
-        width: "320px", borderRight: "1px solid rgba(229, 231, 235, 0.8)",
-        padding: "1rem", overflowY: "auto", flexShrink: 0
-      }}>
+    <div className="nurse-desktop-layout nurse-view-container" style={{ minHeight: "unset" }}>
+      {/* ── Desktop Sidebar ── */}
+      <div className="nurse-sidebar-glass nurse-sidebar-desktop">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
           <div style={{ fontWeight: "700", fontSize: "0.9rem", color: "#374151" }}>
             Active Sessions ({sessionIds.length})
@@ -317,8 +314,42 @@ export default function NurseDashboardPage({ nurseInfo, onLogout }) {
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="nurse-main-glass" style={{ flex: 1, overflowY: "auto", padding: "1.25rem" }}>
+      {/* ── Mobile Session Chips Strip ── */}
+      <div className="nurse-mobile-session-strip nurse-sidebar-glass">
+        {sessionIds.length === 0 ? (
+          <span style={{ fontSize: "0.8rem", color: "#9ca3af", padding: "0.2rem 0" }}>
+            No sessions yet...
+          </span>
+        ) : (
+          sessionIds.map(sid => {
+            const sd = liveData[sid] || sessions[sid] || {};
+            const ts = sd.triage_state || {};
+            const priority = (ts.priority || sd.priority || "").toLowerCase();
+            const hasFlag  = (ts.red_flags || sd.red_flags || []).length > 0;
+            const pName    = sd.patient_name || ts.patient_name || sid;
+            return (
+              <button
+                key={sid}
+                className={`nurse-session-chip ${activeSessionId === sid ? "active" : ""} ${hasFlag || priority === "high" ? "high" : ""}`}
+                onClick={() => handleSelectSession(sid)}
+              >
+                {hasFlag ? "🚨 " : priority === "high" ? "⚠️ " : "👤 "}
+                {pName.split(" ")[0]}
+              </button>
+            );
+          })
+        )}
+        <button onClick={onLogout} style={{
+          marginLeft: "auto", flexShrink: 0,
+          fontSize: "0.72rem", background: "none", border: "1px solid #d1d5db",
+          borderRadius: "14px", padding: "0.3rem 0.65rem", cursor: "pointer", color: "#6b7280"
+        }}>
+          Sign Out
+        </button>
+      </div>
+
+      {/* ── Main Content ── */}
+      <div className="nurse-main-glass nurse-main-content">
         {!activeSessionId ? (
           <div style={{ textAlign: "center", color: "#9ca3af", marginTop: "4rem" }}>
             <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🩺</div>
@@ -328,9 +359,9 @@ export default function NurseDashboardPage({ nurseInfo, onLogout }) {
           <>
             {/* Session Header */}
             <div style={{
-              display: "flex", justifyContent: "space-between", alignItems: "flex-start",
-              marginBottom: "1rem", background: "white", padding: "1rem", borderRadius: "8px",
-              border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
+              display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center",
+              marginBottom: "1rem", background: "white", padding: "0.85rem 1rem", borderRadius: "8px",
+              border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.05)", gap: "0.75rem"
             }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
