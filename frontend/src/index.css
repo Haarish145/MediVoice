@@ -302,3 +302,56 @@ body {
   font-style: italic;
   margin-top: 0.2rem;
 }
+
+/* =========================================================
+   SCENIC BACKGROUND BACKDROPS (PATIENT & NURSE VIEWS)
+   ========================================================= */
+
+/* Patient Page Scenic Hospital Patient & Clinic Care Backdrop */
+.patient-view-container {
+  min-height: calc(100vh - 65px);
+  background: linear-gradient(135deg, rgba(235, 245, 255, 0.72) 0%, rgba(219, 234, 254, 0.78) 50%, rgba(240, 249, 255, 0.82) 100%),
+              url('/patient_bg.jpg') center center / cover no-repeat fixed;
+  padding: 1.5rem 1rem 3rem 1rem;
+  transition: all 0.3s ease;
+}
+
+/* Nurse Station & Triage Monitoring Backdrop */
+.nurse-view-container {
+  min-height: calc(100vh - 65px);
+  background: linear-gradient(135deg, rgba(241, 245, 249, 0.76) 0%, rgba(226, 232, 240, 0.80) 50%, rgba(248, 250, 252, 0.84) 100%),
+              url('/nurse_bg.jpg') center center / cover no-repeat fixed;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced Glassmorphism Cards for Patient & Nurse Pages */
+.patient-view-container .card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 86, 145, 0.10);
+  border-radius: 12px;
+}
+
+.nurse-view-container .card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
+  border-radius: 12px;
+}
+
+.nurse-sidebar-glass {
+  background: rgba(248, 250, 252, 0.90) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.nurse-main-glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+

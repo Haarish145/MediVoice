@@ -1,4 +1,4 @@
-export default function VoiceRecorder({ isListening, isSupported, onStart, onStop, disabled }) {
+export default function VoiceRecorder({ isListening, isSupported, isUsingFallback, onStart, onStop, disabled }) {
   if (!isSupported) {
     return (
       <div style={{
@@ -13,7 +13,7 @@ export default function VoiceRecorder({ isListening, isSupported, onStart, onSto
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.6rem" }}>
       <button
         id="mic-btn"
         className={`btn ${isListening ? "btn-danger" : "btn-primary"}`}
@@ -32,6 +32,16 @@ export default function VoiceRecorder({ isListening, isSupported, onStart, onSto
       <div style={{ fontSize: "0.85rem", color: isListening ? "#dc2626" : "#6b7280", fontWeight: isListening ? 600 : 400 }}>
         {isListening ? "Listening... (tap to stop)" : "Tap microphone to speak"}
       </div>
+      {isUsingFallback && !isListening && (
+        <div style={{
+          fontSize: "0.73rem", color: "#92400e", background: "#fef3c7",
+          border: "1px solid #fcd34d", borderRadius: "8px",
+          padding: "0.3rem 0.65rem", maxWidth: "260px", textAlign: "center"
+        }}>
+          ⚠️ Voice recognition uses Hindi fallback for this language.
+          <br/>Text input below works for all languages.
+        </div>
+      )}
     </div>
   );
 }

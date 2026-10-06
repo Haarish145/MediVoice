@@ -24,6 +24,8 @@ class TriageState(BaseModel):
     is_completed: bool = False
     seen_at: Optional[str] = None
     seen_by: Optional[str] = None
+    # Each entry: {"description": str, "duration": str, "severity": str}
+    additional_complaints: List[Dict[str, Any]] = Field(default_factory=list)
 
 class RedFlagDetail(BaseModel):
     rule_id: str

@@ -39,6 +39,69 @@ const SAMPLE_SYMPTOMS = {
     { label: "Severe Pain 8/10 ⚡", text: "दर्द बहुत तेज है 8/10" },
     { label: "No other problem / Complete ✅", text: "कोई अन्य समस्या नहीं है, पूरा कर सकते हैं" }
   ],
+  te: [
+    { label: "Chest pain (5 mins) 🫀", text: "నాకు 5 నిమిషాల నుంచి గుండెల్లో నొప్పిగా ఉంది" },
+    { label: "Breathing difficulty 🫁", text: "నాకు శ్వాస తీసుకోవడం చాలా కష్టంగా ఉంది" },
+    { label: "Fever & Headache 🌡️", text: "నాకు తీవ్రమైన జ్వరం మరియు తలనొప్పి ఉంది" },
+    { label: "Severe Pain 8/10 ⚡", text: "నొప్పి తీవ్రత 10 కి 8 గా ఉంది" },
+    { label: "No other problem / Complete ✅", text: "ఇంకేమీ సమస్యలు లేవు, పూర్తి చేయవచ్చు" }
+  ],
+  kn: [
+    { label: "Chest pain (5 mins) 🫀", text: "ನನಗೆ 5 ನಿಮಿಷಗಳಿಂದ ಎದೆ ನೋವು ಇದೆ" },
+    { label: "Breathing difficulty 🫁", text: "ನನಗೆ ಉಸಿರಾಡಲು ತುಂಬಾ ಕಷ್ಟವಾಗುತ್ತಿದೆ" },
+    { label: "Fever & Headache 🌡️", text: "ನನಗೆ ತೀವ್ರ ಜ್ವರ ಮತ್ತು ತಲೆನೋವು ಇದೆ" },
+    { label: "Severe Pain 8/10 ⚡", text: "ನೋವಿನ ತೀವ್ರತೆ 10 ರಲ್ಲಿ 8 ರಷ್ಟಿದೆ" },
+    { label: "No other problem / Complete ✅", text: "ಬೇರೆ ಯಾವುದೇ ಸಮಸ್ಯೆ ಇಲ್ಲ, ಮುಗಿಸಬಹುದು" }
+  ],
+  ml: [
+    { label: "Chest pain (5 mins) 🫀", text: "എനിക്ക് 5 മിനിറ്റായി നെഞ്ചുവേദന അനുഭവപ്പെടുന്നു" },
+    { label: "Breathing difficulty 🫁", text: "എനിക്ക് ശ്വാസമെടുക്കാൻ വളരെയധികം ബുദ്ധിമുട്ടുണ്ട്" },
+    { label: "Fever & Headache 🌡️", text: "എനിക്ക് കഠിനമായ പനിയും തലവേദനയും ഉണ്ട്" },
+    { label: "Severe Pain 8/10 ⚡", text: "വേദനയുടെ തീവ്രത 10-ൽ 8 ആണ്" },
+    { label: "No other problem / Complete ✅", text: "വേറെ പ്രശ്നങ്ങളൊന്നുമില്ല, പൂർത്തിയാക്കാം" }
+  ],
+  bn: [
+    { label: "Chest pain (5 mins) 🫀", text: "আমার ৫ মিনিট ধরে বুকে তীব্র ব্যথা হচ্ছে" },
+    { label: "Breathing difficulty 🫁", text: "আমার শ্বাস নিতে খুব কষ্ট হচ্ছে" },
+    { label: "Fever & Headache 🌡️", text: "আমার প্রচণ্ড জ্বর এবং মাথাব্যথা আছে" },
+    { label: "Severe Pain 8/10 ⚡", text: "ব্যথার তীব্রতা ১০ এর মধ্যে ৮" },
+    { label: "No other problem / Complete ✅", text: "অন্য কোনো সমস্যা নেই, সম্পন্ন করতে পারি" }
+  ],
+  mr: [
+    { label: "Chest pain (5 mins) 🫀", text: "माझ्या छातीत ५ मिनिटांपासून तीव्र वेदना होत आहेत" },
+    { label: "Breathing difficulty 🫁", text: "मला श्वास घेण्यास खूप त्रास होत आहे" },
+    { label: "Fever & Headache 🌡️", text: "मला तीव्र ताप आणि डोकेदुखी आहे" },
+    { label: "Severe Pain 8/10 ⚡", text: "वेदनांची तीव्रता १० पैकी ८ आहे" },
+    { label: "No other problem / Complete ✅", text: "इतर कोणतीही समस्या नाही, पूर्ण करू शकता" }
+  ],
+  gu: [
+    { label: "Chest pain (5 mins) 🫀", text: "મને ૫ મિનિટથી છાતીમાં દુખાવો થઈ રહ્યો છે" },
+    { label: "Breathing difficulty 🫁", text: "મને શ્વાસ લેવામાં ખૂબ જ તકલીફ પડી રહી છે" },
+    { label: "Fever & Headache 🌡️", text: "મને સખત તાવ અને માથાનો દુખાવો છે" },
+    { label: "Severe Pain 8/10 ⚡", text: "દુખાવાની તીવ્રતા ૧૦ માંથી ૮ છે" },
+    { label: "No other problem / Complete ✅", text: "અન્ય કોઈ તકલીફ નથી, પૂર્ણ કરી શકીએ છીએ" }
+  ],
+  pa: [
+    { label: "Chest pain (5 mins) 🫀", text: "ਮੈਨੂੰ 5 ਮਿੰਟਾਂ ਤੋਂ ਛਾਤੀ ਵਿੱਚ ਤੇਜ਼ ਦਰਦ ਹੋ ਰਿਹਾ ਹੈ" },
+    { label: "Breathing difficulty 🫁", text: "ਮੈਨੂੰ ਸਾਹ ਲੈਣ ਵਿੱਚ ਬਹੁਤ ਤਕਲੀਫ਼ ਹੋ ਰਹੀ ਹੈ" },
+    { label: "Fever & Headache 🌡️", text: "ਮੈਨੂੰ ਤੇਜ਼ ਬੁਖ਼ਾਰ ਅਤੇ ਸਿਰਦਰਦ ਹੈ" },
+    { label: "Severe Pain 8/10 ⚡", text: "ਦਰਦ ਦੀ ਗੰਭੀਰਤਾ 10 ਵਿੱਚੋਂ 8 ਹੈ" },
+    { label: "No other problem / Complete ✅", text: "ਕੋਈ ਹੋਰ ਸਮੱਸਿਆ ਨਹੀਂ ਹੈ, ਪੂਰਾ ਕਰ ਸਕਦੇ ਹੋ" }
+  ],
+  or: [
+    { label: "Chest pain (5 mins) 🫀", text: "ମୋତେ ୫ ମିନିଟ ଧରି ଛାତିରେ ଯନ୍ତ୍ରଣା ହେଉଛି" },
+    { label: "Breathing difficulty 🫁", text: "ମୋତେ ନିଶ୍ୱାସ ନେବାରେ ବହୁତ କଷ୍ଟ ହେଉଛି" },
+    { label: "Fever & Headache 🌡️", text: "ମୋତେ ପ୍ରବଳ ଜ୍ୱର ଏବଂ ମୁଣ୍ଡବିନ୍ଧା ଅଛି" },
+    { label: "Severe Pain 8/10 ⚡", text: "ଯନ୍ତ୍ରଣା ୧୦ ରୁ ୮ ଅଟେ" },
+    { label: "No other problem / Complete ✅", text: "ଆଉ କୌଣସି ସମସ୍ୟା ନାହିଁ, ସମାପ୍ତ କରିପାରିବା" }
+  ],
+  as: [
+    { label: "Chest pain (5 mins) 🫀", text: "মোৰ ৫ মিনিট ধৰি বুকুত বিষ হৈ আছে" },
+    { label: "Breathing difficulty 🫁", text: "মোৰ উশাহ লওঁতে বহুত কষ্ট হৈছে" },
+    { label: "Fever & Headache 🌡️", text: "মোৰ তীব্ৰ জ্বৰ আৰু মূৰৰ বিষ হৈছে" },
+    { label: "Severe Pain 8/10 ⚡", text: "বিষৰ মাত্ৰা ১০ ৰ ভিতৰত ৮" },
+    { label: "No other problem / Complete ✅", text: "অন্য কোনো সমস্যা নাই, সমাপ্ত কৰিব পাৰো" }
+  ],
   en: [
     { label: "Chest pain (5 mins) 🫀", text: "I have had sudden chest pain for 5 minutes" },
     { label: "Breathing difficulty 🫁", text: "I am having severe difficulty breathing" },
@@ -79,7 +142,7 @@ export default function PatientPage() {
     });
   }, [sessionId, selectedLanguage, sendMessage]);
 
-  const { isListening, isSupported, startListening, stopListening, speakText } = useVoice({
+  const { isListening, isSupported, isUsingFallback, isSpeaking, startListening, stopListening, speakText, stopSpeaking } = useVoice({
     language: langLocale,
     onPartialTranscript: (text) => setPartialText(text),
     onFinalTranscript: (text) => {
@@ -120,7 +183,7 @@ export default function PatientPage() {
         setTimeout(() => setScreen("done"), 1000);
       } else if (data.followup_question) {
         setCurrentQuestion(data.followup_question);
-        speakText(data.followup_question, langLocale);
+        speakText(data.followup_question, selectedLanguage);
       }
       setStatusText("");
     } else if (event === "red_flag_detected") {
@@ -136,7 +199,7 @@ export default function PatientPage() {
       setMessages([{ id: 0, speaker: "assistant", original_text: initQ, timestamp: new Date().toISOString() }]);
       setScreen("conversation");
       // Read initial question out loud
-      speakText(initQ, langLocale);
+      speakText(initQ, selectedLanguage);
     }
   };
 
@@ -233,7 +296,7 @@ export default function PatientPage() {
   }
 
   if (screen === "conversation") {
-    const quickPrompts = SAMPLE_SYMPTOMS[selectedLanguage] || SAMPLE_SYMPTOMS.ta;
+    const quickPrompts = SAMPLE_SYMPTOMS[selectedLanguage] || SAMPLE_SYMPTOMS.en || [];
 
     return (
       <div className="main-container" style={{ maxWidth: "600px" }}>
@@ -263,20 +326,47 @@ export default function PatientPage() {
 
         {/* Current Active Question */}
         {currentQuestion && (
-          <div className="card" style={{ background: "#e6f0fa", border: "1px solid #bfdbfe", padding: "1rem" }}>
-            <div style={{ fontSize: "0.75rem", color: "#1e40af", fontWeight: 700, letterSpacing: "0.5px", marginBottom: "0.3rem" }}>
-              MEDIVOICE FOLLOW-UP QUESTION
+          <div className="card" style={{ background: "#f0f7ff", border: "1.5px solid #93c5fd", padding: "1.1rem", borderRadius: "12px", boxShadow: "0 2px 8px rgba(37,99,235,0.08)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
+              <span style={{ fontSize: "0.75rem", color: "#1d4ed8", fontWeight: 700, letterSpacing: "0.5px" }}>
+                MEDIVOICE CLINICAL QUESTION
+              </span>
+              {isSpeaking && (
+                <span style={{ fontSize: "0.72rem", color: "#2563eb", background: "#dbeafe", padding: "0.15rem 0.5rem", borderRadius: "12px", fontWeight: 600 }}>
+                  🔊 Playing Audio...
+                </span>
+              )}
             </div>
-            <p style={{ fontSize: "1.05rem", color: "#1e3a8a", fontWeight: 600, lineHeight: 1.5 }}>
+            <p style={{ fontSize: "1.08rem", color: "#1e3a8a", fontWeight: 600, lineHeight: 1.5, margin: "0.2rem 0 0.6rem 0" }}>
               {currentQuestion}
             </p>
-            <button style={{
-              marginTop: "0.5rem", fontSize: "0.8rem", background: "none",
-              border: "none", color: "#2563eb", cursor: "pointer", padding: 0, fontWeight: 500
-            }}
-              onClick={() => speakText(currentQuestion, langLocale)}>
-              🔊 Listen again
-            </button>
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              <button
+                type="button"
+                style={{
+                  fontSize: "0.85rem",
+                  background: isSpeaking ? "#2563eb" : "#e0e7ff",
+                  color: isSpeaking ? "white" : "#1e40af",
+                  border: "none",
+                  borderRadius: "20px",
+                  padding: "0.4rem 0.9rem",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.35rem",
+                  transition: "all 0.2s ease"
+                }}
+                onClick={() => {
+                  if (isSpeaking) {
+                    stopSpeaking();
+                  } else {
+                    speakText(currentQuestion, selectedLanguage);
+                  }
+                }}>
+                {isSpeaking ? "⏹️ Stop Audio" : "🔊 Listen to Question"}
+              </button>
+            </div>
           </div>
         )}
 
@@ -296,6 +386,7 @@ export default function PatientPage() {
           <VoiceRecorder
             isListening={isListening}
             isSupported={isSupported}
+            isUsingFallback={isUsingFallback}
             onStart={startListening}
             onStop={stopListening}
             disabled={connectionStatus !== "connected"}

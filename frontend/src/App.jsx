@@ -45,13 +45,19 @@ export default function App() {
       </header>
 
       <main>
-        <div style={{ display: activeTab === "patient" ? "block" : "none" }}>
+        <div
+          className="patient-view-container"
+          style={{ display: activeTab === "patient" ? "block" : "none" }}
+        >
           <PatientPage />
         </div>
-        <div style={{ display: activeTab === "nurse" ? "block" : "none" }}>
+        <div
+          className="nurse-view-container"
+          style={{ display: activeTab === "nurse" ? "block" : "none" }}
+        >
           {nurseInfo
             ? <NurseDashboardPage nurseInfo={nurseInfo} onLogout={handleNurseLogout} />
-            : <NurseLoginPage onLogin={handleNurseLogin} />
+            : <div style={{ padding: "3rem 1rem" }}><NurseLoginPage onLogin={handleNurseLogin} /></div>
           }
         </div>
       </main>

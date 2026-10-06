@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from app.core.config import settings
-from app.api.routes import health, languages, sessions, auth
+from app.api.routes import health, languages, sessions, auth, tts
 from app.websocket import patient, nurse
 
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +29,7 @@ app.include_router(health.router, prefix=settings.API_PREFIX, tags=["Health"])
 app.include_router(languages.router, prefix=settings.API_PREFIX, tags=["Languages"])
 app.include_router(sessions.router, prefix=settings.API_PREFIX, tags=["Sessions"])
 app.include_router(auth.router, prefix=settings.API_PREFIX, tags=["Authentication"])
+app.include_router(tts.router, prefix=settings.API_PREFIX, tags=["Text to Speech"])
 
 # Include WebSocket Routers
 app.include_router(patient.router, tags=["Patient WebSocket"])

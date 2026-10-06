@@ -271,11 +271,11 @@ export default function NurseDashboardPage({ nurseInfo, onLogout }) {
   const isCompleted = activeData?.is_completed || activeTriageState?.is_completed || activeData?.status === "completed";
 
   return (
-    <div style={{ display: "flex", height: "calc(100vh - 70px)", overflow: "hidden" }}>
+    <div style={{ display: "flex", height: "calc(100vh - 65px)", overflow: "hidden" }}>
       {/* Left Sidebar - Session List */}
-      <div style={{
-        width: "310px", borderRight: "1px solid #e5e7eb",
-        padding: "1rem", overflowY: "auto", background: "#f9fafb", flexShrink: 0
+      <div className="nurse-sidebar-glass" style={{
+        width: "320px", borderRight: "1px solid rgba(229, 231, 235, 0.8)",
+        padding: "1rem", overflowY: "auto", flexShrink: 0
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
           <div style={{ fontWeight: "700", fontSize: "0.9rem", color: "#374151" }}>
@@ -316,7 +316,7 @@ export default function NurseDashboardPage({ nurseInfo, onLogout }) {
       </div>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "1.25rem" }}>
+      <div className="nurse-main-glass" style={{ flex: 1, overflowY: "auto", padding: "1.25rem" }}>
         {!activeSessionId ? (
           <div style={{ textAlign: "center", color: "#9ca3af", marginTop: "4rem" }}>
             <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🩺</div>

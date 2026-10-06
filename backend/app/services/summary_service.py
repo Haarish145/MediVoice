@@ -14,7 +14,7 @@ class SummaryService:
         p_name = (triage_state.patient_name or "").strip()
         p_prefix = f"Patient {p_name}" if p_name and p_name.lower() != "anonymous patient" else "Patient"
         complaint = (triage_state.main_complaint or "").strip().lower()
-        if not complaint or complaint == "unspecified acute symptoms" or complaint == "acute discomfort":
+        if not complaint or complaint in ["unspecified acute symptoms", "acute discomfort", "patient reports acute symptoms"]:
             sentences.append(f"{p_prefix} reports acute discomfort.")
         elif "chest" in complaint:
             sentences.append(f"{p_prefix} reports chest discomfort.")
@@ -30,10 +30,22 @@ class SummaryService:
             sentences.append(f"{p_prefix} presents with acute bleeding.")
         elif "fever" in complaint:
             sentences.append(f"{p_prefix} reports high fever.")
+        elif "cough" in complaint or "cold" in complaint:
+            sentences.append(f"{p_prefix} reports persistent cough.")
+        elif "back" in complaint:
+            sentences.append(f"{p_prefix} reports back pain.")
+        elif "joint" in complaint or "body" in complaint or "knee" in complaint or "leg" in complaint:
+            sentences.append(f"{p_prefix} reports body and joint pain.")
+        elif "vomit" in complaint or "nausea" in complaint:
+            sentences.append(f"{p_prefix} reports nausea and vomiting.")
+        elif "dizzy" in complaint:
+            sentences.append(f"{p_prefix} reports dizziness.")
         else:
-            # Clean complaint of non-latin characters
+            # Clean complaint of non-latin characters and generic error phrases
             clean_c = re.sub(r"[^\x00-\x7F]+", "", complaint).strip()
-            if clean_c:
+            if any(err in clean_c for err in ["patient reports", "acute symptoms", "acute discomfort"]):
+                sentences.append(f"{p_prefix} reports acute discomfort.")
+            elif clean_c:
                 sentences.append(f"{p_prefix} reports {clean_c}.")
             else:
                 sentences.append(f"{p_prefix} reports acute discomfort.")
@@ -42,12 +54,16 @@ class SummaryService:
         duration = (triage_state.duration or "").strip()
         onset = (triage_state.onset or "").strip().lower()
         
-        # Clean duration
+        # Clean duration of non-latin characters and invalid fallback phrases
         clean_duration = re.sub(r"[^\x00-\x7F]+", "", duration).strip()
+        if any(err in clean_duration.lower() for err in ["patient reports", "acute symptoms", "acute discomfort"]):
+            clean_duration = ""
 
         if clean_duration:
-            # Format nicely: "5 minutes" -> "Symptoms started approximately 5 minutes ago."
-            if "ago" in clean_duration.lower():
+            # Format nicely
+            if clean_duration.lower().startswith("since ") or clean_duration.lower().startswith("from "):
+                sentences.append(f"Symptoms started {clean_duration.lower()}.")
+            elif "ago" in clean_duration.lower():
                 sentences.append(f"Symptoms started {clean_duration}.")
             elif "for " in clean_duration.lower():
                 dur_val = clean_duration.lower().replace("for ", "").strip()
@@ -70,7 +86,7 @@ class SummaryService:
         assoc_symptoms = [
             re.sub(r"[^\x00-\x7F]+", "", s).strip()
             for s in triage_state.associated_symptoms
-            if re.sub(r"[^\x00-\x7F]+", "", s).strip()
+            if re.sub(r"[^\x00-\x7F]+", "", s).strip() and not any(err in s.lower() for err in ["patient reports", "acute symptoms"])
         ]
 
         if clean_loc and assoc_symptoms:
@@ -83,8 +99,13 @@ class SummaryService:
         # 4. Current Clinical Assessment / Missing Information Status
         sev = (triage_state.severity or "").strip()
         clean_sev = re.sub(r"[^\x00-\x7F]+", "", sev).strip()
+        if any(err in clean_sev.lower() for err in ["patient reports", "acute symptoms", "acute discomfort"]):
+            clean_sev = ""
 
         if clean_sev:
+            # Format bare digits 1-10 as /10
+            if re.match(r"^\b(10|[1-9])\b$", clean_sev):
+                clean_sev = f"{clean_sev}/10"
             sentences.append(f"Reported severity is rated as {clean_sev}.")
         elif "severity" in triage_state.missing_information or not triage_state.severity:
             sentences.append("Severity assessment is currently being collected.")
@@ -97,6 +118,27 @@ class SummaryService:
         if triage_state.red_flags:
             flags = [f.get("rule_name", "Red Flag Alert") for f in triage_state.red_flags]
             sentences.append(f"HIGH PRIORITY RED FLAGS DETECTED: {', '.join(flags)}.")
+
+        # 6. Additional Complaints (collected during post-intake loop)
+        add_complaints = getattr(triage_state, "additional_complaints", [])
+        if add_complaints:
+            idx = 1
+            for ac in add_complaints:
+                desc = re.sub(r"[^\x00-\x7F]+", "", (ac.get("description") or "")).strip()
+                dur  = re.sub(r"[^\x00-\x7F]+", "", (ac.get("duration")    or "")).strip()
+                sev  = re.sub(r"[^\x00-\x7F]+", "", (ac.get("severity")    or "")).strip()
+                # Skip invalid generic strings
+                if not desc or any(err in desc.lower() for err in ["patient reports", "acute symptoms", "acute discomfort"]):
+                    continue
+                parts = [f"Additional complaint {idx}: {desc}"]
+                idx += 1
+                if dur and not any(err in dur.lower() for err in ["patient reports", "acute symptoms"]):
+                    parts.append(f"duration {dur}")
+                if sev and not any(err in sev.lower() for err in ["patient reports", "acute symptoms"]):
+                    if re.match(r"^\b(10|[1-9])\b$", sev):
+                        sev = f"{sev}/10"
+                    parts.append(f"severity {sev}")
+                sentences.append(". ".join(parts) + ".")
 
         # Combine sentences
         full_summary = " ".join(sentences)
