@@ -52,7 +52,7 @@ class TriageService:
                 "speaker": "assistant",
                 "original_text": init_q_patient,
                 "translated_text": init_q_en,
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat() + "Z"
             }
             sessions_cache[session_id] = {
                 "session_id": session_id,
@@ -60,7 +60,7 @@ class TriageService:
                 "patient_name": p_name,
                 "facility": fac,
                 "status": "active",
-                "created_at": datetime.utcnow().isoformat(),
+                "created_at": datetime.utcnow().isoformat() + "Z",
                 "triage_state": state.dict(),
                 "messages": [initial_msg]
             }
@@ -130,7 +130,7 @@ class TriageService:
             "speaker": "patient",
             "original_text": patient_text,
             "translated_text": None,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat() + "Z"
         }
         session["messages"].append(original_msg)
 
@@ -432,7 +432,7 @@ class TriageService:
                 "speaker": "assistant",
                 "original_text": q_patient,
                 "translated_text": q_en,
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat() + "Z"
             }
             session["messages"].append(bot_msg)
 
@@ -442,7 +442,7 @@ class TriageService:
         # Save back to cache
         session["triage_state"] = triage_state.dict()
         session["status"] = "completed" if triage_state.is_completed else "active"
-        session["updated_at"] = datetime.utcnow().isoformat()
+        session["updated_at"] = datetime.utcnow().isoformat() + "Z"
 
         return {
             "session_id": session_id,

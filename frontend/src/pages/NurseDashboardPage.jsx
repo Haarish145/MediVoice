@@ -12,7 +12,9 @@ import { SUPPORTED_LANGUAGES } from "../utils/languages";
 function formatSeenTime(timestamp) {
   if (!timestamp) return null;
   try {
-    const diffMs = Date.now() - new Date(timestamp).getTime();
+    // Normalize: treat bare ISO strings without tz as UTC
+    const normalized = /[Z+]/.test(timestamp) ? timestamp : timestamp + "Z";
+    const diffMs = Date.now() - new Date(normalized).getTime();
     const diffSec = Math.floor(diffMs / 1000);
     if (diffSec < 60) return "just now";
     const diffMin = Math.floor(diffSec / 60);

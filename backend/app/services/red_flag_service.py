@@ -98,7 +98,7 @@ class RedFlagService:
                     priority=rule["priority"],
                     triggered_symptoms=matching_symptoms,
                     reason=rule["reason"],
-                    timestamp=datetime.utcnow().isoformat(),
+                    timestamp=datetime.utcnow().isoformat() + "Z",
                     reference=rule["reference"]
                 )
                 triggered_flags.append(flag)

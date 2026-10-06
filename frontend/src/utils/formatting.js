@@ -14,8 +14,26 @@ export function formatPriority(priority) {
 export function formatTime(isoString) {
   if (!isoString) return "";
   try {
-    const d = new Date(isoString);
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    // If the string has no timezone indicator, treat it as UTC by appending 'Z'
+    const normalized = /[Z+]/.test(isoString) ? isoString : isoString + "Z";
+    const d = new Date(normalized);
+    if (isNaN(d.getTime())) return isoString;
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  } catch (e) {
+    return isoString;
+  }
+}
+
+export function formatDateTime(isoString) {
+  if (!isoString) return "";
+  try {
+    const normalized = /[Z+]/.test(isoString) ? isoString : isoString + "Z";
+    const d = new Date(normalized);
+    if (isNaN(d.getTime())) return isoString;
+    return d.toLocaleString([], {
+      month: "short", day: "numeric",
+      hour: "2-digit", minute: "2-digit"
+    });
   } catch (e) {
     return isoString;
   }

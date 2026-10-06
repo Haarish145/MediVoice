@@ -97,7 +97,7 @@ async def mark_session_seen(session_id: str, req: Optional[MarkSeenRequest] = No
     if session_id not in sessions_cache:
         raise HTTPException(status_code=404, detail="Session not found")
     
-    seen_time = datetime.utcnow().isoformat()
+    seen_time = datetime.utcnow().isoformat() + "Z"
     nurse_user = (req.nurse_username if req and req.nurse_username else "nurse_admin").strip()
 
     sessions_cache[session_id]["seen_at"] = seen_time
