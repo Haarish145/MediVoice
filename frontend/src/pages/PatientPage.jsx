@@ -136,6 +136,13 @@ export default function PatientPage() {
   const handleSendText = useCallback((text) => {
     if (!text?.trim() || !sessionId) return;
     setStatusText("Processing symptoms...");
+    const tempMsg = {
+      id: "pending-" + Date.now(),
+      speaker: "patient",
+      original_text: text.trim(),
+      timestamp: new Date().toISOString()
+    };
+    setMessages(prev => [...prev, tempMsg]);
     sendMessage({
       event: "patient_speech_final",
       data: { text: text.trim(), language: selectedLanguage }
@@ -159,37 +166,59 @@ export default function PatientPage() {
 
     if (event === "ai_processing") {
       setStatusText("Analyzing clinical intake...");
-    } else if (event === "session_completed" || data?.is_completed) {
+
+    } else if (event === "session_completed") {
+      // Explicit session_completed event from backend
       setStatusText("Intake session complete!");
       if (data?.triage_state) setTriageState(data.triage_state);
+      if (data?.messages && data.messages.length > 0) {
+        setMessages(data.messages);
+      }
       setTimeout(() => {
         setScreen("done");
-      }, 1000);
+      }, 1500);
+
     } else if (event === "triage_state_updated") {
-      setTriageState(data.triage_state);
-      
-      // Update full conversation history
+      // Primary real-time update event
+      if (data.triage_state) setTriageState(data.triage_state);
+
+      // Sync full conversation history from backend (replaces optimistic pending msg)
       if (data.messages && data.messages.length > 0) {
         setMessages(data.messages);
       } else if (data.patient_message) {
+        // Fallback: merge single patient message, avoid duplicates
         setMessages(prev => {
-          const exists = prev.some(m => m.id === data.patient_message.id);
-          return exists ? prev : [...prev, data.patient_message];
+          // Remove any pending/optimistic versions of this message
+          const filtered = prev.filter(m => !String(m.id).startsWith("pending-"));
+          const exists = filtered.some(m => m.id === data.patient_message.id);
+          return exists ? filtered : [...filtered, data.patient_message];
         });
+      } else {
+        // No messages at all — just remove pending messages
+        setMessages(prev => prev.filter(m => !String(m.id).startsWith("pending-")));
       }
 
       if (data.is_completed) {
         setStatusText("Intake session complete!");
-        setTimeout(() => setScreen("done"), 1000);
-      } else if (data.followup_question) {
-        setCurrentQuestion(data.followup_question);
-        speakText(data.followup_question, selectedLanguage);
+        setTimeout(() => setScreen("done"), 1500);
+      } else {
+        if (data.followup_question) {
+          setCurrentQuestion(data.followup_question);
+          speakText(data.followup_question, selectedLanguage);
+        }
+        setStatusText("");
       }
-      setStatusText("");
+
     } else if (event === "red_flag_detected") {
-      setRedFlags(data.red_flags || []);
+      setRedFlags(prev => {
+        const newFlags = data.red_flags || [];
+        // Merge flags, avoid duplicates by rule_name
+        const existing = new Set(prev.map(f => f.rule_name));
+        const merged = [...prev, ...newFlags.filter(f => !existing.has(f.rule_name))];
+        return merged;
+      });
     }
-  }, [lastEvent, langLocale, speakText]);
+  }, [lastEvent, speakText, selectedLanguage]);
 
   const handleStartSession = async () => {
     const s = await startSession(selectedLanguage, patientName, facility);

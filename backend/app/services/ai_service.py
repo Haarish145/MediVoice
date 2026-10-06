@@ -90,13 +90,20 @@ class AIService:
         elif any(w in text_lower for w in ["vomit", "nausea", "வாந்தி", "उल्टी"]) and not is_negated(["vomit", "nausea"]):
             extracted.main_complaint = "vomiting"
             extracted.symptoms.append("vomiting")
-            extracted.location = "abdomen"
         elif any(w in text_lower for w in ["dizzy", "dizziness", "lightheaded", "faint", "vertigo", "மயக்கம்", "चक्कर"]) and not is_negated(["dizzy", "dizziness"]):
             extracted.main_complaint = "dizziness"
             extracted.symptoms.append("dizziness")
-        elif any(w in text_lower for w in ["rash", "itching", "allergy", "burn", "wound", "cut", "injury"]) and not is_negated(["rash", "burn", "wound"]):
-            extracted.main_complaint = "injury or skin reaction"
-            extracted.symptoms.append("injury or skin reaction")
+        elif any(w in text_lower for w in ["burn", "scald", "thermal", "தீக்காயம்", "தீ காயம்", "சுட்ட காயம்", "जलना", "जलन", "പൊള്ളൽ", "కాలిన గాయం"]) and not is_negated(["burn", "scald"]):
+            is_sev = any(sw in text_lower for sw in ["severe", "acute", "bad", "terrible", "heavy", "கடுமையான", "தீவிரமான", "तेज", "மிகக் கடுமையான"])
+            extracted.main_complaint = "severe burn injury" if is_sev else "burn injury"
+            extracted.symptoms.append(extracted.main_complaint)
+        elif any(w in text_lower for w in ["wound", "cut", "laceration", "injury", "trauma", "bleeding wound", "காயம்", "வெட்டுக் காயம்", "घाव", "चोट"]) and not is_negated(["wound", "cut", "injury"]):
+            is_sev = any(sw in text_lower for sw in ["severe", "acute", "deep", "heavy", "profuse", "கடுமையான", "तेज"])
+            extracted.main_complaint = "severe wound and physical injury" if is_sev else "wound and physical injury"
+            extracted.symptoms.append(extracted.main_complaint)
+        elif any(w in text_lower for w in ["rash", "itching", "allergy"]) and not is_negated(["rash", "itching", "allergy"]):
+            extracted.main_complaint = "skin rash and allergy"
+            extracted.symptoms.append("skin rash and allergy")
         else:
             # Check if text contains clinical words in English before defaulting
             # Exclude pure duration or scale statements from becoming a symptom
@@ -191,12 +198,18 @@ class AIService:
         # 6. Location
         if "chest" in text_lower or extracted.main_complaint == "chest discomfort":
             extracted.location = "chest"
-        elif "abdomen" in text_lower or "stomach" in text_lower or extracted.main_complaint == "abdominal pain":
+        elif "abdomen" in text_lower or "stomach" in text_lower or extracted.main_complaint in ["abdominal pain", "severe abdominal pain", "diarrhea", "severe diarrhea"]:
             extracted.location = "abdomen"
         elif "head" in text_lower or extracted.main_complaint == "headache":
             extracted.location = "head"
         elif "back" in text_lower or extracted.main_complaint == "back pain":
             extracted.location = "back"
+        elif any(hw in text_lower for hw in ["hand", "arm", "wrist", "finger", "palm", "கையில்", "கை", "हाथ", "చేయి"]):
+            extracted.location = "hand"
+        elif any(lw in text_lower for lw in ["leg", "foot", "ankle", "knee", "toe", "காலில்", "கால்", "पैर", "కాలు"]):
+            extracted.location = "leg"
+        elif any(fw in text_lower for fw in ["face", "facial", "eye", "mouth", "முகம்", "चेहरा"]):
+            extracted.location = "face"
 
         # 7. Missing Information List
         missing = []

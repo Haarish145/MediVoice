@@ -92,10 +92,37 @@ COMMON_TRANSLATIONS = {
         "சுமார் மூன்று நாட்கள்": "About 3 days",
         "கடுமையான": "severe",
         "தீவிரமான": "severe",
+        "ஆம் எனக்கு கையில் தீக்காயம் பட்டு உள்ளது மிகக் கடுமையாக வலிக்கிறது": "Yes, I have a severe burn on my hand and it is hurting severely.",
+        "எனக்கு கையில் தீக்காயம் பட்டு உள்ளது மிகக் கடுமையாக வலிக்கிறது": "I have a severe burn on my hand and it is hurting severely.",
+        "எனக்கு கையில் தீக்காயம் பட்டு உள்ளது": "I have a burn injury on my hand.",
+        "கையில் தீக்காயம்": "Burn on the hand",
+        "தீக்காயம்": "Burn injury",
+        "தீ காயம்": "Burn injury",
+        "சுட்ட காயம்": "Burn wound",
+        "காயம்": "Injury",
+        "வெட்டுக் காயம்": "Cut wound",
+        "அடிபட்டது": "Injured",
+        "கையில் வலி": "Hand pain",
+        "காலில் வலி": "Leg pain",
+        "மிகக் கடுமையாக வலிக்கிறது": "Hurting very severely",
+        "கடுமையாக வலிக்கிறது": "Hurting severely",
+        "வலிக்கிறது": "Hurting",
+        "வலிக்குது": "Hurting",
+        "ஆம்": "Yes",
+        "ஆமாம்": "Yes",
         "ஒன்று": "1", "இரண்டு": "2", "மூன்று": "3", "நான்கு": "4", "ஐந்து": "5",
         "ஆறு": "6", "ஏழு": "7", "எட்டு": "8", "ஒன்பது": "9", "பத்து": "10"
     },
     "hi": {
+        "हाँ मेरे हाथ में जल गया है और बहुत तेज दर्द हो रहा है": "Yes, my hand is burned and it is hurting severely.",
+        "मेरे हाथ में जल गया है": "My hand is burned.",
+        "हाथ में जलन": "Burn on the hand",
+        "जल गया": "Burned",
+        "चोट": "Injury",
+        "घाव": "Wound",
+        "बहुत तेज दर्द हो रहा है": "Hurting very severely",
+        "हाँ": "Yes",
+        "हां": "Yes",
         "मुझे अचानक सीने में दर्द हुआ": "I suddenly developed chest pain.",
         "मुझे सीने में दर्द है": "I have chest pain.",
         "सीने में दर्द": "Chest pain",
@@ -138,6 +165,11 @@ COMMON_TRANSLATIONS = {
         "జ్వరం": "Fever",
         "తలనొప్పి": "Headache",
         "కడుపు నొప్పి": "Abdominal pain",
+        "కాలిన గాయం": "Burn injury",
+        "చేతిలో కాలిన గాయం": "Burn on the hand",
+        "గాయం": "Injury",
+        "చాలా తీవ్రమైన నొప్పి": "Very severe pain",
+        "అవును": "Yes",
         "దగ్గు": "Cough",
         "వాంతులు": "Vomiting",
         "కళ్ళు తిరగడం": "Dizziness",
@@ -148,12 +180,17 @@ COMMON_TRANSLATIONS = {
         "ఉదయం నుండి": "since morning",
         "లేదు": "No other problem.",
         "ఒకటి": "1", "రెండు": "2", "మూడు": "3", "నాలుగు": "4", "ఐదు": "5",
-        "ఆరు": "6", "ఏడు": "7", "ఎనిమిది": "8", "తొమ్మిది": "9", "పది": "10"
+        "ஆరు": "6", "ఏడు": "7", "ఎనిమిది": "8", "తొమ్మిది": "9", "పది": "10"
     },
     "kn": {
         "ನನಗೆ ಎದೆ ನೋವು ಇದೆ": "I have chest pain.",
         "ಎದೆ ನೋವು": "Chest pain",
         "ಉಸಿರಾಟದ ತೊಂದರೆ": "Difficulty breathing",
+        "ಸುಟ್ಟ ಗಾಯ": "Burn injury",
+        "ಕೈಯಲ್ಲಿ ಸುಟ್ಟ ಗಾಯ": "Burn on the hand",
+        "ಗಾಯ": "Injury",
+        "ತುಂಬಾ ನೋವಾಗುತ್ತಿದೆ": "Hurting severely",
+        "ಹೌದು": "Yes",
         "ಜ್ವರ": "Fever",
         "ತಲೆನೋವು": "Headache",
         "ಹೊಟ್ಟೆ ನೋವು": "Abdominal pain",
@@ -173,6 +210,12 @@ COMMON_TRANSLATIONS = {
         "എനിക്ക് നെഞ്ചുവേദനയുണ്ട്": "I have chest pain.",
         "നെഞ്ചുവേദന": "Chest pain",
         "ശ്വാസതടസ്സം": "Difficulty breathing",
+        "തീപ്പൊള്ളൽ": "Burn injury",
+        "പൊള്ളൽ": "Burn injury",
+        "കൈയിൽ പൊള്ളൽ": "Burn on the hand",
+        "മുറിവ്": "Injury",
+        "കഠിനമായ വേദന": "Severe pain",
+        "അതെ": "Yes",
         "പനി": "Fever",
         "തലവേദന": "Headache",
         "വയറുവേദന": "Abdominal pain",
@@ -280,22 +323,39 @@ COMMON_TRANSLATIONS = {
 # Offline phrase replacement patterns for Indian medical terms
 PHRASE_REPLACEMENTS = [
     # Tamil
+    (re.compile(r"தீக்காயம்|தீ\s*காயம்|சுட்ட\s*காயம்", re.IGNORECASE), "burn injury"),
+    (re.compile(r"வெட்டுக்\s*காயம்|வெட்டுக்காயம்|காயம்|அடிபட்டது", re.IGNORECASE), "injury wound"),
+    (re.compile(r"கையில்|கைகளில்", re.IGNORECASE), "on my hand"),
+    (re.compile(r"காலில்|கால்களில்", re.IGNORECASE), "on my leg"),
+    (re.compile(r"முகத்தில்|முகம்", re.IGNORECASE), "on my face"),
+    (re.compile(r"வயிற்றுப்போக்கு|வயறறபபகக|பேதி", re.IGNORECASE), "diarrhea"),
     (re.compile(r"நெஞ்சு\s*வலி|மார்பில்\s*வலி|மார்பு\s*வலி", re.IGNORECASE), "chest pain"),
     (re.compile(r"மூச்சு\s*(?:திணறல்|விட\s*முடியல|விடுவது\s*சிரமம்|சிரமமாக)", re.IGNORECASE), "difficulty breathing"),
     (re.compile(r"தலை\s*வலி", re.IGNORECASE), "headache"),
     (re.compile(r"காய்ச்சல்", re.IGNORECASE), "fever"),
-    (re.compile(r"வயிறு\s*வலி", re.IGNORECASE), "abdominal pain"),
+    (re.compile(r"வயிறு\s*வலி|வயிற்று\s*வலி", re.IGNORECASE), "abdominal pain"),
     (re.compile(r"முதுகு\s*வலி", re.IGNORECASE), "back pain"),
     (re.compile(r"இருமல்", re.IGNORECASE), "cough"),
     (re.compile(r"வாந்தி", re.IGNORECASE), "vomiting"),
     (re.compile(r"மயக்கம்", re.IGNORECASE), "dizziness"),
     (re.compile(r"திடீரென்று|திடீரென", re.IGNORECASE), "suddenly"),
+    (re.compile(r"மிகக்\s*கடுமையாக|மிக\s*கடுமையாக|மிகவும்\s*கடுமையாக|ரொம்ப\s*கடுமையாக|கடுமையாக|தீவிரமாக", re.IGNORECASE), "very severely"),
+    (re.compile(r"வலிக்கிறது|வலிக்குது|வலிக்குகிறது", re.IGNORECASE), "hurting"),
+    (re.compile(r"பட்டு\s*உள்ளது|பட்டுள்ளது|ஆகிவிட்டது", re.IGNORECASE), "occurred"),
+    (re.compile(r"^ஆம்|^ஆமாம்|\bஆம்\b|\bஆமாம்\b", re.IGNORECASE), "Yes"),
     (re.compile(r"(\d+)\s*நிமிட(?:ங்கள்|ங்களாக|மாக)", re.IGNORECASE), r"\1 minutes"),
     (re.compile(r"(\d+)\s*மணி\s*நேர(?:ங்கள்|மாக)", re.IGNORECASE), r"\1 hours"),
     (re.compile(r"(\d+)\s*நா(?:ட்கள்|ளாக|ளாய்)", re.IGNORECASE), r"\1 days"),
     (re.compile(r"எனக்கு", re.IGNORECASE), "I have"),
-    (re.compile(r"இருக்கிறது|உள்ளது|வலிக்குது", re.IGNORECASE), ""),
+    (re.compile(r"இருக்கிறது|உள்ளது", re.IGNORECASE), ""),
     # Hindi
+    (re.compile(r"जल\s*गया|जलना|जलन", re.IGNORECASE), "burn injury"),
+    (re.compile(r"चोट|घाव", re.IGNORECASE), "injury wound"),
+    (re.compile(r"हाथ\s*में", re.IGNORECASE), "on my hand"),
+    (re.compile(r"पैर\s*में", re.IGNORECASE), "on my leg"),
+    (re.compile(r"बहुत\s*तेज\s*दर्द", re.IGNORECASE), "very severe pain"),
+    (re.compile(r"दर्द\s*हो\s*रहा\s*है|दर्द\s*है", re.IGNORECASE), "hurting"),
+    (re.compile(r"^हाँ|^हां|\bहाँ\b|\bहां\b", re.IGNORECASE), "Yes"),
     (re.compile(r"सीने\s*में\s*दर्द", re.IGNORECASE), "chest pain"),
     (re.compile(r"सांस\s*(?:लेने\s*में\s*तकलीफ|फूलना)", re.IGNORECASE), "difficulty breathing"),
     (re.compile(r"सिर\s*दर्द", re.IGNORECASE), "headache"),
@@ -631,6 +691,58 @@ def parse_indic_symptom(text: str) -> Optional[str]:
     ]):
         return "Acute bleeding"
 
+    # Burns / Scalds / Thermal injury
+    if any(w in t for w in [
+        "தீக்காயம்", "தீ காயம்", "தீக்காய", "சுட்ட காயம்", "சுட்டகாயம்",
+        "பொള്ളൽ", "തീപ്പൊള്ളൽ", "కాలిన గాయం", "సుట్ట గాయ", "ಸುಟ್ಟ ಗಾಯ",
+        "जलना", "जलन", "जल गया", "जला हुआ", "burn", "burns", "scald"
+    ]):
+        loc = None
+        if any(w in t for w in ["கையில்", "கை", "हाथ", "చేయి", "చేతిలో", "ಕೈ", "ಕೈಯಲ್ಲಿ", "കൈ", "കൈയിൽ", "hand", "arm"]):
+            loc = "on the hand"
+        elif any(w in t for w in ["காலில்", "கால்", "पैर", "కాలు", "കാല്", "leg", "foot"]):
+            loc = "on the leg"
+        elif any(w in t for w in ["முகத்தில்", "முகம்", "चेहरा", "face"]):
+            loc = "on the face"
+        elif any(w in t for w in ["மார்பில்", "மார்பு", "सीने"]):
+            loc = "on the chest"
+
+        has_pain = any(w in t for w in ["வலி", "வலிக்கிறது", "வலிக்குது", "दर्द", "నొప్పి", "വേദന", "pain", "hurt", "hurting"])
+        is_yes = any(w in t for w in ["ஆம்", "ஆமாம்", "हाँ", "हां", "అవును", "హౌదు", "yes"])
+
+        prefix = "Yes, I have a " if is_yes else "I have a "
+        sev_str = "severe burn injury" if is_severe else "burn injury"
+        loc_str = f" {loc}" if loc else ""
+        pain_str = " that hurts severely" if (has_pain and is_severe) else (" that hurts" if has_pain else "")
+        return f"{prefix}{sev_str}{loc_str}{pain_str}".strip()
+
+    # Wounds / Cuts / Trauma / Laceration
+    if any(w in t for w in [
+        "வெட்டுக் காயம்", "வெட்டுக்காயம்", "காயம்", "அடிபட்டது",
+        "घाव", "चोट", "गाయం", "മുറിവ്", "wound", "cut", "laceration", "injury"
+    ]):
+        loc = None
+        if any(w in t for w in ["கையில்", "கை", "हाथ", "చేయి", "చేతిలో", "hand"]):
+            loc = "on the hand"
+        elif any(w in t for w in ["காலில்", "கால்", "पैर", "కాలు", "leg"]):
+            loc = "on the leg"
+        elif any(w in t for w in ["முகத்தில்", "முகம்", "चेहरा", "face"]):
+            loc = "on the face"
+
+        has_pain = any(w in t for w in ["வலி", "வலிக்கிறது", "दर्द", "pain", "hurt"])
+        is_yes = any(w in t for w in ["ஆம்", "ஆமாம்", "हाँ", "yes"])
+        prefix = "Yes, I have a " if is_yes else "I have a "
+        sev_str = "severe injury wound" if is_severe else "injury wound"
+        loc_str = f" {loc}" if loc else ""
+        pain_str = " that hurts severely" if (has_pain and is_severe) else (" that hurts" if has_pain else "")
+        return f"{prefix}{sev_str}{loc_str}{pain_str}".strip()
+
+    # Limb & localized pain
+    if any(w in t for w in ["கையில் வலி", "हाथ में दर्द", "చేతి నొప్పి"]):
+        return "Severe hand pain" if is_severe else "Hand pain"
+    if any(w in t for w in ["காலில் வலி", "पैर में दर्द", "కాలి నొప్పి"]):
+        return "Severe leg pain" if is_severe else "Leg pain"
+
     return None
 
 class TranslationService:
@@ -753,13 +865,34 @@ class TranslationService:
             return lang_dict[normalized]
 
         # 2. Try Online High-Accuracy Multi-Tier Translation first for complete sentences
+        _AUX_FRAGMENTS = {
+            "i have", "i", "have", "suddenly", "is", "it is", "there is", "to me",
+            "for me", "and", "yes", "no", "yes i have", "i have a", "a", "the",
+            "me", "my", "in", "on", "at", "of", "with", "that"
+        }
         online_res = await self._online_translate(normalized, source_language, "en")
         if online_res:
-            cleaned = remove_non_latin(online_res)
-            if cleaned and len(cleaned) > 1:
-                return cleaned
-            if online_res:
-                return online_res
+            cleaned_online = remove_non_latin(online_res).strip()
+            _is_frag = (
+                not cleaned_online
+                or len(cleaned_online) <= 3
+                or cleaned_online.lower() in _AUX_FRAGMENTS
+                or cleaned_online.lower().rstrip(".").strip() in _AUX_FRAGMENTS
+            )
+            if not _is_frag:
+                return cleaned_online
+            # Weak online result — try offline clinical parsers before giving up
+            _sym = parse_indic_symptom(normalized)
+            _dur = parse_indic_duration(normalized)
+            if _sym and _dur:
+                return f"I have {_sym.lower()} for {_dur.lower()}"
+            if _sym:
+                return _sym
+            if _dur:
+                return _dur
+            # Last resort: return the weak online result if it has any content at all
+            if cleaned_online and len(cleaned_online) > 1:
+                return cleaned_online
 
         # 3. Check Indic Symptom & Duration Parsers (Offline Fallback)
         sym_res = parse_indic_symptom(normalized)
@@ -777,7 +910,8 @@ class TranslationService:
             working = pattern.sub(replacement, working)
 
         cleaned = remove_non_latin(working)
-        if cleaned and len(cleaned) > 1:
+        AUX_FRAGMENTS = {"i have", "i", "have", "suddenly", "is", "it is", "there is", "to me", "for me", "and", "yes", "no", "yes i have"}
+        if cleaned and cleaned.lower().strip() not in AUX_FRAGMENTS and len(cleaned) > 2:
             return cleaned
 
         # 6. Check if digits exist in input (e.g. duration or scale rating)

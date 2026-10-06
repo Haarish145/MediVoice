@@ -36,7 +36,9 @@ export function useWebSocket(role, sessionId) {
       },
       onMessage: (data) => {
         if (!mountedRef.current) return;
-        setLastEvent(data);
+        // Wrap with a unique key so React always sees a new object even if
+        // two consecutive events have the same type (prevents state deduplication)
+        setLastEvent({ ...data, _seq: Date.now() + Math.random() });
       }
     };
 

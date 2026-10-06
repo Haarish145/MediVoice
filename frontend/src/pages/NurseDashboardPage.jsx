@@ -409,7 +409,7 @@ export default function NurseDashboardPage({ nurseInfo, onLogout }) {
               <div>
                 <div className="card">
                   <div className="card-title">Live Transcript & Conversation</div>
-                  <ConversationView messages={activeMessages} />
+                  <ConversationView messages={activeMessages} nurseView={true} />
                 </div>
                 {activeTriageState.uncertainties?.length > 0 && (
                   <div className="card" style={{ background: "#fffbe6", border: "1px solid #ffe58f" }}>

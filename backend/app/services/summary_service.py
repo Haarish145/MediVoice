@@ -26,6 +26,10 @@ class SummaryService:
             sentences.append(f"{p_prefix} reports acute discomfort.")
         elif "diarrhea" in complaint or "diarrhoea" in complaint or "loose motion" in complaint:
             sentences.append(f"{p_prefix} reports severe acute diarrhea." if "severe" in complaint else f"{p_prefix} reports acute diarrhea.")
+        elif "burn" in complaint or "scald" in complaint:
+            sentences.append(f"{p_prefix} presents with an acute severe burn injury." if "severe" in complaint else f"{p_prefix} presents with an acute burn injury.")
+        elif "wound" in complaint or "injury" in complaint:
+            sentences.append(f"{p_prefix} presents with an acute physical wound and injury.")
         elif "chest" in complaint:
             sentences.append(f"{p_prefix} reports chest discomfort.")
         elif "breath" in complaint or "dyspnea" in complaint:
@@ -80,6 +84,9 @@ class SummaryService:
             # Format nicely
             if clean_duration.lower().startswith("since ") or clean_duration.lower().startswith("from "):
                 sentences.append(f"Symptoms started {clean_duration.lower()}.")
+            elif clean_duration.lower().startswith("about "):
+                dur_val = clean_duration[6:].strip()
+                sentences.append(f"Symptoms started approximately {dur_val} ago.")
             elif "ago" in clean_duration.lower():
                 sentences.append(f"Symptoms started {clean_duration}.")
             elif "for " in clean_duration.lower():
@@ -139,11 +146,29 @@ class SummaryService:
         # 6. Additional Complaints (collected during post-intake loop)
         add_complaints = getattr(triage_state, "additional_complaints", [])
         if add_complaints:
+            from app.services.translation_service import parse_indic_symptom, parse_indic_duration
             idx = 1
             for ac in add_complaints:
-                desc = re.sub(r"[^\x00-\x7F]+", "", (ac.get("description") or "")).strip()
-                dur  = re.sub(r"[^\x00-\x7F]+", "", (ac.get("duration")    or "")).strip()
-                sev  = re.sub(r"[^\x00-\x7F]+", "", (ac.get("severity")    or "")).strip()
+                raw_desc = (ac.get("description") or "").strip()
+                if any(ord(c) >= 128 for c in raw_desc):
+                    parsed_d = parse_indic_symptom(raw_desc)
+                    if parsed_d:
+                        raw_desc = parsed_d
+                desc = re.sub(r"[^\x00-\x7F]+", "", raw_desc).strip()
+
+                raw_dur = (ac.get("duration") or "").strip()
+                if any(ord(c) >= 128 for c in raw_dur):
+                    parsed_dur = parse_indic_duration(raw_dur)
+                    if parsed_dur:
+                        raw_dur = parsed_dur
+                dur  = re.sub(r"[^\x00-\x7F]+", "", raw_dur).strip()
+
+                raw_sev = (ac.get("severity") or "").strip()
+                m_sev = re.search(r"\b(10|[1-9])\b", raw_sev)
+                if m_sev:
+                    raw_sev = f"{m_sev.group(1)}/10"
+                sev  = re.sub(r"[^\x00-\x7F]+", "", raw_sev).strip()
+
                 # Skip invalid generic strings
                 if not desc or any(err in desc.lower() for err in ["patient reports", "acute symptoms", "acute discomfort"]):
                     continue
@@ -152,8 +177,6 @@ class SummaryService:
                 if dur and not any(err in dur.lower() for err in ["patient reports", "acute symptoms"]):
                     parts.append(f"duration {dur}")
                 if sev and not any(err in sev.lower() for err in ["patient reports", "acute symptoms"]):
-                    if re.match(r"^\b(10|[1-9])\b$", sev):
-                        sev = f"{sev}/10"
                     parts.append(f"severity {sev}")
                 sentences.append(". ".join(parts) + ".")
 

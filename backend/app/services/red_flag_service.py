@@ -59,6 +59,17 @@ RED_FLAG_RULES = [
         ],
         "reason": "Maximal pain severity (10/10) or severe acute gastrointestinal distress reported. Immediate clinical evaluation for acute abdomen / dehydration required.",
         "reference": "Emergency Severity Index (ESI) Level 2 Protocol - Severe Pain / Hypovolemia Risk"
+    },
+    {
+        "rule_id": "HIGH_PRIORITY_ACUTE_BURN_TRAUMA",
+        "rule_name": "Acute Burn / Physical Trauma Warning",
+        "priority": "high",
+        "keywords": [
+            "burn injury", "severe burn injury", "burn", "scald", "deep wound",
+            "severe wound", "தீக்காயம்", "தீ காயம்", "जलना", "जलन", "பொള്ളൽ", "కాలిన గాయం"
+        ],
+        "reason": "Acute burn injury or physical trauma reported. Requires prompt wound assessment, cooling, analgesia, and infection prevention.",
+        "reference": "Emergency Severity Index (ESI) Level 2/3 Protocol - Acute Burns & Trauma"
     }
 ]
 

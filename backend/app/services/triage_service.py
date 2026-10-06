@@ -371,9 +371,11 @@ class TriageService:
                     triage_state.severity = "10/10" if ("10" in patient_text or "பத்து" in patient_text) else "severe"
                 else:
                     triage_state.severity = cand
-                
-            if extracted.location and not triage_state.location:
-                triage_state.location = extracted.location
+
+        if extracted.location and not triage_state.location:
+            triage_state.location = extracted.location
+        if extracted.severity and not triage_state.severity:
+            triage_state.severity = extracted.severity
 
         for unc in extracted.uncertainties:
             if unc not in triage_state.uncertainties:
