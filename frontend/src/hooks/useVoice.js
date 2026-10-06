@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+const rawBaseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+const BASE_URL = rawBaseUrl.replace(/\/+$/, "");
 
 // Chrome Web Speech API supported Indian language locales for STT
 const VOICE_SUPPORTED_LOCALES = new Set([

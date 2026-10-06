@@ -8,7 +8,14 @@ from app.core.config import settings
 # Lightweight SQLite database persistence & in-memory session manager
 DB_PATH = settings.DATABASE_URL.replace("sqlite:///", "")
 
+def ensure_db_dir():
+    if not DB_PATH.startswith(":memory:"):
+        db_dir = os.path.dirname(DB_PATH)
+        if db_dir and not os.path.exists(db_dir):
+            os.makedirs(db_dir, exist_ok=True)
+
 def init_db():
+    ensure_db_dir()
     if DB_PATH.startswith(":memory:"):
         conn = sqlite3.connect(":memory:", check_same_thread=False)
     else:
@@ -81,4 +88,5 @@ init_db()
 sessions_cache: Dict[str, Dict[str, Any]] = {}
 
 def get_db_connection():
+    ensure_db_dir()
     return sqlite3.connect(DB_PATH, check_same_thread=False)

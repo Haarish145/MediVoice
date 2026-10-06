@@ -62,6 +62,16 @@ backend/venv/Scripts/python -m pytest backend/app/tests -v
 
 ---
 
+## 🌐 Cloud & Docker Deployment
+MediVoice is production-ready for free cloud deployment:
+- **FastAPI + WebSockets Backend**: Deploy on [Render](https://render.com) or [Railway](https://railway.app) (Configured with `render.yaml` & `backend/Dockerfile`)
+- **React Frontend**: Deploy on [Vercel](https://vercel.com) (Configured with `vercel.json` & SPA routing)
+- **Docker Compose**: Run full-stack anywhere with a single command: `docker compose up -d`
+👉 Full step-by-step tutorial: [Production Deployment Guide](docs/deployment.md)
+
+
+---
+
 ## 📜 Documentation
 - [Architecture](docs/architecture.md)
 - [Real-Time Flow](docs/real-time-flow.md)

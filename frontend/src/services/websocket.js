@@ -1,4 +1,15 @@
-const BASE_WS_URL = import.meta.env.VITE_WS_URL || "ws://localhost:8000";
+function getBaseWsUrl() {
+  if (import.meta.env.VITE_WS_URL) {
+    return import.meta.env.VITE_WS_URL.replace(/\/+$/, "");
+  }
+  if (import.meta.env.VITE_BACKEND_URL) {
+    const backend = import.meta.env.VITE_BACKEND_URL.replace(/\/+$/, "");
+    return backend.replace(/^http:\/\//i, "ws://").replace(/^https:\/\//i, "wss://");
+  }
+  return "ws://localhost:8000";
+}
+
+const BASE_WS_URL = getBaseWsUrl();
 
 export function createPatientWebSocket(sessionId, handlers = {}) {
   const ws = new WebSocket(`${BASE_WS_URL}/ws/patient/${sessionId}`);

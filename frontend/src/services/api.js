@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+const rawBaseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+const BASE_URL = rawBaseUrl.replace(/\/+$/, "");
 
 export async function fetchHealth() {
   const res = await fetch(`${BASE_URL}/api/health`);

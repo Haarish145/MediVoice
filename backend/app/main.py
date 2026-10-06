@@ -35,6 +35,15 @@ app.include_router(tts.router, prefix=settings.API_PREFIX, tags=["Text to Speech
 app.include_router(patient.router, tags=["Patient WebSocket"])
 app.include_router(nurse.router, tags=["Nurse WebSocket"])
 
+@app.get("/health", tags=["Health"], include_in_schema=False)
+def root_health():
+    return {
+        "status": "ok",
+        "service": settings.PROJECT_NAME,
+        "version": settings.VERSION,
+        "demo_mode": settings.DEMO_MODE
+    }
+
 @app.on_event("startup")
 async def startup_event():
     logger.info(f"MediVoice Backend v{settings.VERSION} starting...")

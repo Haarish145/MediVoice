@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: medivoice-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - DEMO_MODE=true
+      - JWT_SECRET=medivoice-production-secret-change-me-2026
+      - DATABASE_URL=sqlite:////data/medivoice.db
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,http://127.0.0.1:3000,*
+      # - AI_API_KEY=your_key_here
+      # - SPEECH_API_KEY=your_key_here
+      # - TRANSLATION_API_KEY=your_key_here
+      # - TTS_API_KEY=your_key_here
+    volumes:
+      - medivoice-db:/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_BACKEND_URL=http://localhost:8000
+        - VITE_WS_URL=ws://localhost:8000
+    container_name: medivoice-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  medivoice-db:

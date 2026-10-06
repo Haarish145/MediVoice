@@ -1,5 +1,14 @@
 import os
-from pydantic import BaseSettings
+try:
+    from pydantic_settings import BaseSettings
+except ImportError:
+    from pydantic import BaseSettings
+
+def get_allowed_origins() -> list[str]:
+    origins_env = os.getenv("ALLOWED_ORIGINS", "")
+    if origins_env:
+        return [origin.strip() for origin in origins_env.split(",") if origin.strip()]
+    return ["http://localhost:5173", "http://127.0.0.1:5173", "https://*.vercel.app", "*"]
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "MediVoice"
@@ -7,7 +16,7 @@ class Settings(BaseSettings):
     API_PREFIX: str = "/api"
     
     # Cors
-    ALLOWED_ORIGINS: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173", "*"]
+    ALLOWED_ORIGINS: list[str] = get_allowed_origins()
     
     # Secrets & Mode
     JWT_SECRET: str = os.getenv("JWT_SECRET", "medivoice-hackathon-secret-key-change-in-production-2026")
@@ -23,3 +32,4 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./medivoice.db")
 
 settings = Settings()
+
