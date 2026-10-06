@@ -36,6 +36,7 @@ app.include_router(patient.router, tags=["Patient WebSocket"])
 app.include_router(nurse.router, tags=["Nurse WebSocket"])
 
 @app.get("/health", tags=["Health"], include_in_schema=False)
+@app.get("/healthz", tags=["Health"], include_in_schema=False)
 def root_health():
     return {
         "status": "ok",
