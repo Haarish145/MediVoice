@@ -1,22 +1,29 @@
 import os
-try:
-    from pydantic_settings import BaseSettings
-except ImportError:
-    from pydantic import BaseSettings
+import json
+from typing import List, Union
 
-def get_allowed_origins() -> list[str]:
-    origins_env = os.getenv("ALLOWED_ORIGINS", "")
-    if origins_env:
-        return [origin.strip() for origin in origins_env.split(",") if origin.strip()]
-    return ["http://localhost:5173", "http://127.0.0.1:5173", "https://*.vercel.app", "*"]
+def parse_origins(val: Union[str, List[str], None]) -> List[str]:
+    if not val:
+        return ["http://localhost:5173", "http://127.0.0.1:5173", "https://*.vercel.app", "*"]
+    if isinstance(val, list):
+        return val
+    val = str(val).strip()
+    if val.startswith("[") and val.endswith("]"):
+        try:
+            parsed = json.loads(val)
+            if isinstance(parsed, list):
+                return parsed
+        except Exception:
+            pass
+    return [origin.strip() for origin in val.split(",") if origin.strip()]
 
-class Settings(BaseSettings):
-    PROJECT_NAME: str = "MediVoice"
-    VERSION: str = "1.0.0"
-    API_PREFIX: str = "/api"
+class Settings:
+    PROJECT_NAME: str = os.getenv("PROJECT_NAME", "MediVoice")
+    VERSION: str = os.getenv("VERSION", "1.0.0")
+    API_PREFIX: str = os.getenv("API_PREFIX", "/api")
     
     # Cors
-    ALLOWED_ORIGINS: list[str] = get_allowed_origins()
+    ALLOWED_ORIGINS: List[str] = parse_origins(os.getenv("ALLOWED_ORIGINS"))
     
     # Secrets & Mode
     JWT_SECRET: str = os.getenv("JWT_SECRET", "medivoice-hackathon-secret-key-change-in-production-2026")
@@ -32,4 +39,3 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./medivoice.db")
 
 settings = Settings()
-
