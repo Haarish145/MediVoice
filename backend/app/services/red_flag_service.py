@@ -48,6 +48,17 @@ RED_FLAG_RULES = [
         ],
         "reason": "Severe acute hemorrhage detected. Immediate vital signs evaluation and hemostasis required.",
         "reference": "Emergency Trauma Triage Guidelines"
+    },
+    {
+        "rule_id": "HIGH_PRIORITY_CRITICAL_PAIN_GI",
+        "rule_name": "Critical Pain / Acute Gastrointestinal Warning",
+        "priority": "high",
+        "keywords": [
+            "10/10", "severe diarrhea", "acute diarrhea", "severe abdominal pain",
+            "unbearable", "extreme pain", "தீவிரமான வயிற்றுப்போக்கு", "பேதி"
+        ],
+        "reason": "Maximal pain severity (10/10) or severe acute gastrointestinal distress reported. Immediate clinical evaluation for acute abdomen / dehydration required.",
+        "reference": "Emergency Severity Index (ESI) Level 2 Protocol - Severe Pain / Hypovolemia Risk"
     }
 ]
 

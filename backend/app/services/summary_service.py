@@ -14,14 +14,24 @@ class SummaryService:
         p_name = (triage_state.patient_name or "").strip()
         p_prefix = f"Patient {p_name}" if p_name and p_name.lower() != "anonymous patient" else "Patient"
         complaint = (triage_state.main_complaint or "").strip().lower()
+
+        # If complaint contains non-ASCII characters, translate through Indic symptom parser
+        if any(ord(c) >= 128 for c in complaint):
+            from app.services.translation_service import parse_indic_symptom
+            mapped_sym = parse_indic_symptom(complaint)
+            if mapped_sym:
+                complaint = mapped_sym.lower()
+
         if not complaint or complaint in ["unspecified acute symptoms", "acute discomfort", "patient reports acute symptoms"]:
             sentences.append(f"{p_prefix} reports acute discomfort.")
+        elif "diarrhea" in complaint or "diarrhoea" in complaint or "loose motion" in complaint:
+            sentences.append(f"{p_prefix} reports severe acute diarrhea." if "severe" in complaint else f"{p_prefix} reports acute diarrhea.")
         elif "chest" in complaint:
             sentences.append(f"{p_prefix} reports chest discomfort.")
         elif "breath" in complaint or "dyspnea" in complaint:
             sentences.append(f"{p_prefix} reports difficulty breathing.")
         elif "abdom" in complaint or "stomach" in complaint:
-            sentences.append(f"{p_prefix} reports acute abdominal discomfort.")
+            sentences.append(f"{p_prefix} reports acute abdominal pain and discomfort.")
         elif "head" in complaint:
             sentences.append(f"{p_prefix} reports severe headache.")
         elif "stroke" in complaint or "speech" in complaint or "paralysis" in complaint:
@@ -53,6 +63,13 @@ class SummaryService:
         # 2. Symptom Duration & Onset Timeline
         duration = (triage_state.duration or "").strip()
         onset = (triage_state.onset or "").strip().lower()
+        
+        # If duration contains non-ASCII characters, translate through Indic duration parser
+        if any(ord(c) >= 128 for c in duration):
+            from app.services.translation_service import parse_indic_duration
+            mapped_dur = parse_indic_duration(duration)
+            if mapped_dur:
+                duration = mapped_dur
         
         # Clean duration of non-latin characters and invalid fallback phrases
         clean_duration = re.sub(r"[^\x00-\x7F]+", "", duration).strip()

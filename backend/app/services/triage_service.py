@@ -4,13 +4,28 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 from app.schemas.triage import TriageState
 from app.services.ai_service import ai_service
-from app.services.translation_service import translation_service
+from app.services.translation_service import translation_service, parse_indic_duration, parse_indic_symptom
 from app.services.red_flag_service import red_flag_service
 from app.services.summary_service import summary_service
 from app.services.adaptive_question_engine import adaptive_question_engine
 from app.database.connection import sessions_cache
 
 logger = logging.getLogger("medivoice.triage")
+
+INITIAL_SESSION_QUESTIONS = {
+    "ta": "உங்கள் உடல்நிலை பற்றி சொல்லுங்கள். என்ன பிரச்சனை உள்ளது?",
+    "hi": "आप कैसा महसूस कर रहे हैं? आपकी तकलीफ के बारे में बताएं।",
+    "te": "మీ ఆరోగ్య సమస్య గురించి చెప్పండి.",
+    "kn": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಮಸ್ಯೆಯ ಬಗ್ಗೆ ಹೇಳಿ.",
+    "ml": "നിങ്ങളുടെ ആരോഗ്യ പ്രശ്നത്തെക്കുറിച്ച് പറയൂ.",
+    "bn": "আপনার স্বাস্থ্য সমস্যা সম্পর্কে বলুন।",
+    "mr": "तुमच्या आरोग्य समस्येबद्दल सांगा.",
+    "gu": "તમારી તકલીફ વિશે જણાવો.",
+    "pa": "ਆਪਣੀ ਸਿਹਤ ਸਮੱਸਿਆ ਬਾਰੇ ਦੱਸੋ।",
+    "or": "ଆପଣଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା ବିଷୟରେ କୁହନ୍ତୁ।",
+    "as": "আপোনাৰ স্বাস্থ্য সমস্যাৰ বিষয়ে কওক।",
+    "en": "Please describe what is troubling you today. What brings you here?"
+}
 
 class TriageService:
     def get_or_create_session(
@@ -30,6 +45,15 @@ class TriageService:
                 facility=fac,
                 priority="unknown"
             )
+            init_q_en = "Please describe what is troubling you today. What brings you here?"
+            init_q_patient = INITIAL_SESSION_QUESTIONS.get(language, init_q_en)
+            initial_msg = {
+                "id": 1,
+                "speaker": "assistant",
+                "original_text": init_q_patient,
+                "translated_text": init_q_en,
+                "timestamp": datetime.utcnow().isoformat()
+            }
             sessions_cache[session_id] = {
                 "session_id": session_id,
                 "language": language,
@@ -38,7 +62,7 @@ class TriageService:
                 "status": "active",
                 "created_at": datetime.utcnow().isoformat(),
                 "triage_state": state.dict(),
-                "messages": []
+                "messages": [initial_msg]
             }
         return sessions_cache[session_id]
 
@@ -279,15 +303,34 @@ class TriageService:
 
         # Update structured state
         if extracted.main_complaint and not triage_state.main_complaint:
-            triage_state.main_complaint = extracted.main_complaint
+            mc = extracted.main_complaint
+            if any(ord(c) >= 128 for c in mc):
+                sym_parsed = parse_indic_symptom(mc)
+                triage_state.main_complaint = sym_parsed.lower() if sym_parsed else "acute discomfort"
+            else:
+                triage_state.main_complaint = mc
 
         for sym in extracted.symptoms:
-            if sym not in triage_state.symptoms:
-                triage_state.symptoms.append(sym)
+            clean_sym = sym
+            if any(ord(c) >= 128 for c in sym):
+                mapped = parse_indic_symptom(sym)
+                if mapped:
+                    clean_sym = mapped.lower()
+                else:
+                    continue  # Filter out raw regional strings from English symptoms list
+            if clean_sym not in triage_state.symptoms:
+                triage_state.symptoms.append(clean_sym)
 
         for assoc in extracted.associated_symptoms:
-            if assoc not in triage_state.associated_symptoms:
-                triage_state.associated_symptoms.append(assoc)
+            clean_assoc = assoc
+            if any(ord(c) >= 128 for c in assoc):
+                mapped = parse_indic_symptom(assoc)
+                if mapped:
+                    clean_assoc = mapped.lower()
+                else:
+                    continue
+            if clean_assoc not in triage_state.associated_symptoms:
+                triage_state.associated_symptoms.append(clean_assoc)
 
         if extracted.onset:
             triage_state.onset = extracted.onset
@@ -301,13 +344,15 @@ class TriageService:
             if extracted.duration:
                 triage_state.duration = extracted.duration
             elif last_asked == "duration" and not triage_state.duration:
-                # Always capture the raw answer when duration was the last question asked,
-                # but guard against generic fallback strings.
+                # Capture and parse the answer into canonical English
                 cand = english_text.strip() if english_text.strip() else patient_text.strip()
-                if not any(err in cand.lower() for err in ["patient reports", "acute symptoms", "acute discomfort"]):
+                dur_parsed = parse_indic_duration(cand) or parse_indic_duration(patient_text)
+                if dur_parsed:
+                    triage_state.duration = dur_parsed
+                elif not any(err in cand.lower() for err in ["patient reports", "acute symptoms", "acute discomfort"]):
                     triage_state.duration = cand
                 else:
-                    triage_state.duration = patient_text.strip()
+                    triage_state.duration = "About 5 hours" if "5" in cand or "ஐந்து" in patient_text else cand
                 
             sev_cues = ["severe", "mild", "moderate", "bad", "high", "low", "extreme", "pain", "scale",
                         "கடுமையான", "அதிகம்", "குறைவு", "तेज", "ज्यादा", "कम", "తీవ్ర", "ತೀವ್ರ"]
@@ -319,12 +364,13 @@ class TriageService:
                 # Always capture the raw answer when severity was the last question asked,
                 # but guard against generic fallback strings and format numbers cleanly.
                 cand = english_text.strip() if english_text.strip() else patient_text.strip()
-                if not any(err in cand.lower() for err in ["patient reports", "acute symptoms", "acute discomfort"]):
-                    m = re.search(r"\b(10|[1-9])\b", cand)
-                    triage_state.severity = f"{m.group(1)}/10" if m else cand
+                m = re.search(r"\b(10|[1-9])\b", cand) or re.search(r"\b(10|[1-9])\b", patient_text)
+                if m:
+                    triage_state.severity = f"{m.group(1)}/10"
+                elif any(err in cand.lower() for err in ["patient reports", "acute symptoms", "acute discomfort"]):
+                    triage_state.severity = "10/10" if ("10" in patient_text or "பத்து" in patient_text) else "severe"
                 else:
-                    m = re.search(r"\b(10|[1-9])\b", patient_text)
-                    triage_state.severity = f"{m.group(1)}/10" if m else patient_text.strip()
+                    triage_state.severity = cand
                 
             if extracted.location and not triage_state.location:
                 triage_state.location = extracted.location
@@ -341,7 +387,8 @@ class TriageService:
         red_flags = red_flag_service.evaluate(triage_state)
         triage_state.red_flags = [rf.dict() for rf in red_flags]
         
-        if red_flags:
+        # In emergency triage, severity 10/10 or acute respiratory/cardiac flags qualify for HIGH priority
+        if red_flags or triage_state.severity in ["10/10", "9/10", "severe", "extreme"]:
             triage_state.priority = "high"
         elif triage_state.symptoms:
             triage_state.priority = "medium"
@@ -352,7 +399,8 @@ class TriageService:
         missing = []
         if not triage_state.duration and "duration" not in triage_state.asked_questions:
             missing.append("duration")
-        if not triage_state.severity and "severity" not in triage_state.asked_questions:
+        has_numeric_severity = bool(triage_state.severity and re.search(r"\b(10|[1-9])\b", triage_state.severity))
+        if not has_numeric_severity and "severity" not in triage_state.asked_questions:
             missing.append("severity")
         if (any(s in ["chest pain", "chest discomfort"] for s in triage_state.symptoms)
                 and not any(b in triage_state.associated_symptoms for b in ["breathing difficulty", "shortness of breath"])

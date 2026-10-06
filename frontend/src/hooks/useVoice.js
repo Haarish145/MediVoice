@@ -123,8 +123,11 @@ export function useVoice({ language = "en-US", onPartialTranscript, onFinalTrans
       };
 
       recognition.onresult = (event) => {
-        // Discard any sound picked up if system audio is actively playing
-        if (isSpeakingRef.current) {
+        // Discard sound only if audio is actively playing through the speaker
+        if (currentAudioRef.current && !currentAudioRef.current.paused) {
+          return;
+        }
+        if (typeof window !== "undefined" && window.speechSynthesis && window.speechSynthesis.speaking) {
           return;
         }
 
@@ -237,6 +240,14 @@ export function useVoice({ language = "en-US", onPartialTranscript, onFinalTrans
         setIsSpeaking(false);
         currentAudioRef.current = null;
       };
+
+      // Safety timeout: ensure speaking flag is freed even if browser audio event is dropped
+      setTimeout(() => {
+        if (!currentAudioRef.current || currentAudioRef.current.paused || currentAudioRef.current.ended) {
+          isSpeakingRef.current = false;
+          setIsSpeaking(false);
+        }
+      }, 7000);
 
       audio.onerror = () => {
         // Fallback to browser SpeechSynthesis if network audio stream fails

@@ -46,9 +46,23 @@ class AIService:
         elif any(w in text_lower for w in ["breath", "breathing difficulty", "shortness of breath", "dyspnea", "suffocat", "gasp", "மூச்சு"]) and not is_negated(["breath", "breathing difficulty", "shortness of breath", "dyspnea"]):
             extracted.main_complaint = "breathing difficulty"
             extracted.symptoms.append("breathing difficulty")
-        elif any(w in text_lower for w in ["abdominal pain", "stomach pain", "stomach ache", "belly", "வயிறு வலி", "पेट दर्द", "cramp"]) and not is_negated(["abdominal pain", "stomach pain", "belly"]):
-            extracted.main_complaint = "abdominal pain"
-            extracted.symptoms.append("abdominal pain")
+        elif any(w in text_lower for w in [
+            "diarrhea", "diarrhoea", "loose motion", "loose motions", "food poisoning",
+            "gastroenteritis", "stomach infection", "வயிற்றுப்போக்கு", "வயறறபபகக",
+            "பேதி", "दस्त", "झाड़ा", "ଝାଡ଼ା", "ઝાડા", "విరేచనాలు"
+        ]) and not is_negated(["diarrhea", "diarrhoea", "loose motion"]):
+            is_sev = any(sw in text_lower for sw in ["severe", "acute", "heavy", "profuse", "10", "தீவிரமான", "கடுமையான", "तेज"])
+            extracted.main_complaint = "severe diarrhea" if is_sev else "diarrhea"
+            extracted.symptoms.append(extracted.main_complaint)
+            extracted.location = "abdomen"
+        elif any(w in text_lower for w in [
+            "abdominal pain", "stomach pain", "stomach ache", "belly", "stomach",
+            "வயிறு வலி", "வயிற்று வலி", "வயிற்றில் வலி", "வயறற வல", "வயிறு", "வயறற",
+            "पेट दर्द", "पेट में दर्द", "కడుపు నొప్పి", "ಹೊಟ್ಟೆ ನೋವು", "cramp"
+        ]) and not is_negated(["abdominal pain", "stomach pain", "belly"]):
+            is_sev = any(sw in text_lower for sw in ["severe", "acute", "sharp", "terrible", "bad", "10", "தீவிரமான", "கடுமையான", "तेज"])
+            extracted.main_complaint = "severe abdominal pain" if is_sev else "abdominal pain"
+            extracted.symptoms.append(extracted.main_complaint)
             extracted.location = "abdomen"
         elif any(w in text_lower for w in ["headache", "head pain", "migraine", "தலைவலி", "सिरदर्द"]) and not is_negated(["headache", "head pain"]):
             extracted.main_complaint = "headache"
@@ -73,7 +87,7 @@ class AIService:
         elif any(w in text_lower for w in ["joint pain", "knee pain", "leg pain", "arm pain", "body pain", "body ache", "muscle pain", "விறைப்பு"]) and not is_negated(["joint pain", "knee pain", "body pain"]):
             extracted.main_complaint = "body and joint pain"
             extracted.symptoms.append("body and joint pain")
-        elif any(w in text_lower for w in ["vomit", "nausea", "diarrhea", "loose motion", "food poisoning", "வாந்தி", "उल्टी"]) and not is_negated(["vomit", "nausea", "diarrhea"]):
+        elif any(w in text_lower for w in ["vomit", "nausea", "வாந்தி", "उल्टी"]) and not is_negated(["vomit", "nausea"]):
             extracted.main_complaint = "vomiting"
             extracted.symptoms.append("vomiting")
             extracted.location = "abdomen"
@@ -158,10 +172,10 @@ class AIService:
             extracted.severity = "moderate"
         elif any(w in text_lower for w in ["mild", "slight", "minor", "லேசான", "हल्का"]):
             extracted.severity = "mild"
-        elif re.search(r"(?:scale|rate|rating|pain|level|grade|score|number|around|about|is|at)\s*(?:of\s*)?\b(10|[1-9])\b", text_lower):
-            m = re.search(r"(?:scale|rate|rating|pain|level|grade|score|number|around|about|is|at)\s*(?:of\s*)?\b(10|[1-9])\b", text_lower)
+        elif re.search(r"(?:scale|rate|rating|pain|level|grade|score)\s*(?:of\s*)?\b(10|[1-9])\b", text_lower):
+            m = re.search(r"(?:scale|rate|rating|pain|level|grade|score)\s*(?:of\s*)?\b(10|[1-9])\b", text_lower)
             extracted.severity = f"{m.group(1)}/10"
-        elif re.search(r"^\s*\b(10|[1-9])\b\s*(?:pain|level|severity|scale|grade|rate|rating)?\s*$", text_lower):
+        elif re.search(r"^\s*\b(10|[1-9])\b\s*(?:pain|level|severity|scale|grade|rate|rating)?\s*$", text_lower) and not any(tu in text_lower for tu in ["hour", "min", "day", "week", "sec", "மணி", "நேரம்", "घंटे"]):
             m = re.search(r"\b(10|[1-9])\b", text_lower)
             extracted.severity = f"{m.group(1)}/10"
         else:

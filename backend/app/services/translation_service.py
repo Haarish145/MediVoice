@@ -70,6 +70,28 @@ COMMON_TRANSLATIONS = {
         "வேறு பிரச்சனை இல்லை": "No other problems.",
         "முடித்துக் கொள்ளலாம்": "We can complete the session.",
         "வேறொன்றுமில்லை": "Nothing else.",
+        "தீவிரமான வயிற்றுப்போக்கு": "Severe diarrhea",
+        "தவரமன வயறறபபகக": "Severe diarrhea",
+        "வயிற்றுப்போக்கு": "Diarrhea",
+        "வயிற்ற்றுப்போக்கு": "Diarrhea",
+        "பேதி": "Diarrhea",
+        "வயிற்று வலி": "Abdominal pain",
+        "வயிற்றில் வலி": "Abdominal pain",
+        "தீவிரமான வயிற்று வலி": "Severe abdominal pain",
+        "சுமார் ஐந்து மணி நேரம்": "About 5 hours",
+        "ஐந்து மணி நேரம்": "5 hours",
+        "சுமார் 5 மணி நேரம்": "About 5 hours",
+        "சுமார் 1 மணி நேரம்": "About 1 hour",
+        "சுமார் 2 மணி நேரம்": "About 2 hours",
+        "சுமார் 3 மணி நேரம்": "About 3 hours",
+        "சுமார் 4 மணி நேரம்": "About 4 hours",
+        "சுமார் 6 மணி நேரம்": "About 6 hours",
+        "சுமார் 12 மணி நேரம்": "About 12 hours",
+        "சுமார் 24 மணி நேரம்": "About 24 hours",
+        "சுமார் இரண்டு நாட்கள்": "About 2 days",
+        "சுமார் மூன்று நாட்கள்": "About 3 days",
+        "கடுமையான": "severe",
+        "தீவிரமான": "severe",
         "ஒன்று": "1", "இரண்டு": "2", "மூன்று": "3", "நான்கு": "4", "ஐந்து": "5",
         "ஆறு": "6", "ஏழு": "7", "எட்டு": "8", "ஒன்பது": "9", "பத்து": "10"
     },
@@ -484,6 +506,133 @@ def remove_non_latin(text: str) -> str:
     cleaned = re.sub(r"[^\x00-\x7F]+", " ", text)
     return re.sub(r"\s+", " ", cleaned).strip()
 
+def parse_indic_duration(text: str) -> Optional[str]:
+    """
+    Intelligently parses Indian language duration expressions into canonical English.
+    Handles Tamil, Hindi, Telugu, Kannada, Malayalam, Bengali, etc.
+    e.g. 'சுமார் ஐந்து மணி நேரம்' -> 'About 5 hours'
+         '5 மணி நேரம்' -> '5 hours'
+         'சுமார் 2 நாட்கள்' -> 'About 2 days'
+         'तीन घंटे से' -> 'About 3 hours'
+    """
+    t = text.lower().strip()
+    is_approx = any(w in t for w in ["சுமார்", "கிட்டத்தட்ட", "लगभग", "करीब", "దాదాపు", "సుమారు", "ಸುಮಾರು", "ഏകദേശം", "প্রায়", "about", "approx", "around"])
+    
+    num_map = {
+        "ஒரு": "1", "ஒன்று": "1", "இரண்டு": "2", "ரெண்டு": "2", "மூன்று": "3", "நான்கு": "4",
+        "ஐந்து": "5", "ஆறு": "6", "ஏழு": "7", "எட்டு": "8", "ஒன்பது": "9", "பத்து": "10",
+        "ஒரு": "1", "இரண்டு": "2", "இரு": "2", "அரை": "0.5",
+        "एक": "1", "दो": "2", "तीन": "3", "चार": "4", "पांच": "5", "पाँच": "5",
+        "छह": "6", "सात": "7", "आठ": "8", "नौ": "9", "दस": "10",
+        "ఒకటి": "1", "ఒక": "1", "రెండు": "2", "మూడు": "3", "నాలుగు": "4", "ఐదు": "5",
+        "ఆరు": "6", "ఏడు": "7", "ఎనిమిది": "8", "తొమ్మిది": "9", "పది": "10",
+        "ಒಂದು": "1", "ಎರಡು": "2", "ಮೂರು": "3", "ನಾಲ್ಕು": "4", "ಐದು": "5",
+        "ഒന്ന്": "1", "രണ്ട്": "2", "മൂന്ന്": "3", "നാല്": "4", "അഞ്ച്": "5",
+        "এক": "1", "দুই": "2", "তিন": "3", "চার": "4", "পাঁচ": "5"
+    }
+
+    unit = None
+    if any(w in t for w in ["மணி நேரம்", "மணி", "நேரம்", "घंटे", "घंटा", "గంటలు", "గంట", "ಗಂಟೆ", "മണിക്കൂർ", "ঘণ্টা", "hour", "hr"]):
+        unit = "hours"
+    elif any(w in t for w in ["நிமிடங்கள்", "நிமிடம்", "நிமி", "मिनट", "నిమిషాలు", "నిమిషం", "ನಿಮಿಷ", "മിനിറ്റ്", "মিনিট", "min"]):
+        unit = "minutes"
+    elif any(w in t for w in ["நாட்கள்", "நாள்", "दिन", "రోజులు", "రోజు", "ದಿನ", "ദിവസം", "দিন", "day"]):
+        unit = "days"
+    elif any(w in t for w in ["வாரம்", "வாரங்கள்", "हफ्ते", "हफ्ता", "వారం", "వారాలు", "ವಾರ", "ആഴ്ച", "সপ্তাহ", "week"]):
+        unit = "weeks"
+
+    num = None
+    digit_match = re.search(r"\b([1-9]|10|12|24|48|[0-9]{1,3})\b", t)
+    if digit_match:
+        num = digit_match.group(1)
+    else:
+        for word, val in num_map.items():
+            if word in t:
+                num = val
+                break
+
+    if num and unit:
+        if num == "1" and unit.endswith("s"):
+            unit = unit[:-1]
+        if is_approx:
+            return f"About {num} {unit}"
+        return f"{num} {unit}"
+    return None
+
+def parse_indic_symptom(text: str) -> Optional[str]:
+    """
+    Intelligently parses Indian language clinical symptom and complaint phrases.
+    Recognizes acute conditions like severe diarrhea, abdominal pain, chest pain,
+    fever, headache, dyspnea across Tamil, Hindi, Telugu, and other Indian languages.
+    """
+    t = text.lower().strip()
+    is_severe = any(w in t for w in [
+        "தீவிரமான", "தவரமன", "கடுமையான", "கடமயான", "மிகவும்", "ரொம்ப", "அதிக",
+        "தாங்க முடியாத", "तेज", "बहुत तेज", "गंभीर", "तीव्र", "చాలా తీవ్రమైన"
+    ])
+
+    # Diarrhea / Loose motions / GI distress
+    if any(w in t for w in [
+        "வயிற்றுப்போக்கு", "வயறறபபகக", "வயிற்ற்றுப்போக்கு", "பேதி", "வயிற்றுப்போக்",
+        "दस्त", "लूज मोशन", "झाड़ा", "ଝାଡ଼ା", "ઝાડા", "diarrhea", "diarrhoea", "loose motion"
+    ]):
+        return "Severe diarrhea" if is_severe else "Diarrhea"
+
+    # Abdominal pain / Stomach ache
+    if any(w in t for w in [
+        "வயிற்று வலி", "வயிறு வலி", "வயிற்றில் வலி", "வயிறு", "வயறற வல",
+        "पेट दर्द", "पेट में दर्द", "कడుపు నొప్పి", "abdominal pain", "stomach pain"
+    ]):
+        return "Severe abdominal pain" if is_severe else "Abdominal pain"
+
+    # Chest pain / Cardiac distress
+    if any(w in t for w in [
+        "நெஞ்சு வலி", "மார்பில் வலி", "மார்பு வலி", "நெஞ்சில் வலி",
+        "सीने में दर्द", "छाती में दर्द", "ఛాతీ నొప్పి", "chest pain", "angina"
+    ]):
+        return "Severe chest pain" if is_severe else "Chest pain"
+
+    # Breathing difficulty / Respiratory distress
+    if any(w in t for w in [
+        "மூச்சுத்திணறல்", "மூச்சு திணறல்", "மூச்சு விட சிரமம்", "மூச்சு",
+        "सांस लेने में तकलीफ", "सांस", "శ్వాస", "breathing difficulty", "shortness of breath"
+    ]):
+        return "Severe breathing difficulty" if is_severe else "Difficulty breathing"
+
+    # Headache / Migraine
+    if any(w in t for w in [
+        "தலைவலி", "கடுமையான தலைவலி", "தலை வலி", "தலையிடி",
+        "सिरदर्द", "सिर में दर्द", "తలనొప్పి", "headache"
+    ]):
+        return "Severe headache" if is_severe else "Headache"
+
+    # Fever / High temperature
+    if any(w in t for w in [
+        "காய்ச்சல்", "அதிக காய்ச்சல்", "சுரம்", "ஜுரம்",
+        "बुखार", "तेज बुखार", "జ్వరం", "fever"
+    ]):
+        return "High fever" if is_severe else "Fever"
+
+    # Vomiting / Nausea
+    if any(w in t for w in [
+        "வாந்தி", "குமட்டல்", "உल्टी", "उल्टी", "వాంతులు", "vomiting", "nausea"
+    ]):
+        return "Vomiting and nausea" if is_severe else "Vomiting"
+
+    # Dizziness / Fainting
+    if any(w in t for w in [
+        "மயக்கம்", "தலைச்சுற்றல்", "चक्कर", "కళ్ళు తిరగడం", "dizziness", "fainting"
+    ]):
+        return "Dizziness and fainting" if is_severe else "Dizziness"
+
+    # Acute bleeding
+    if any(w in t for w in [
+        "ரத்தப்போக்கு", "ரத்தம்", "रक्तस्राव", "खून", "bleeding"
+    ]):
+        return "Acute bleeding"
+
+    return None
+
 class TranslationService:
     async def _online_translate(self, text: str, source_lang: str, target_lang: str) -> Optional[str]:
         if not text or not text.strip():
@@ -491,17 +640,21 @@ class TranslationService:
         
         sl = source_lang if source_lang else "auto"
         tl = target_lang
-        quoted = urllib.parse.quote(text.strip())
+        raw_text = text.strip()
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
             "Accept": "*/*"
         }
 
-        # 1. Primary: Google Client Chrome Extension endpoint (Extremely reliable, not throttled)
+        # 1. Primary: Google Client Chrome Extension endpoint with params dictionary
         try:
-            url1 = f"https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl={sl}&tl={tl}&q={quoted}"
+            url1 = "https://clients5.google.com/translate_a/t"
             async with httpx.AsyncClient(timeout=3.5) as client:
-                res = await client.get(url1, headers=headers)
+                res = await client.get(
+                    url1,
+                    params={"client": "dict-chrome-ex", "sl": sl, "tl": tl, "q": raw_text},
+                    headers=headers
+                )
                 if res.status_code == 200:
                     data = res.json()
                     if isinstance(data, list):
@@ -519,12 +672,15 @@ class TranslationService:
         except Exception as e:
             logger.debug(f"Chrome-ex translate failed: {e}")
 
-        # 2. Secondary: MyMemory Translation API
+        # 2. Secondary: MyMemory Translation API with params
         try:
-            pair = f"{sl}|{tl}"
-            url2 = f"https://api.mymemory.translated.net/get?q={quoted}&langpair={pair}"
+            url2 = "https://api.mymemory.translated.net/get"
             async with httpx.AsyncClient(timeout=3.0) as client:
-                res = await client.get(url2, headers=headers)
+                res = await client.get(
+                    url2,
+                    params={"q": raw_text, "langpair": f"{sl}|{tl}"},
+                    headers=headers
+                )
                 if res.status_code == 200:
                     data = res.json()
                     trans = data.get("responseData", {}).get("translatedText", "").strip()
@@ -533,11 +689,33 @@ class TranslationService:
         except Exception as e:
             logger.debug(f"MyMemory translate failed: {e}")
 
-        # 3. Tertiary: Google GTX public endpoint
+        # 3. Tertiary: Google Mobile Web translate
         try:
-            url3 = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sl}&tl={tl}&dt=t&q={quoted}"
+            url3 = "https://translate.google.com/m"
+            async with httpx.AsyncClient(timeout=3.0, follow_redirects=True) as client:
+                res = await client.get(
+                    url3,
+                    params={"sl": sl, "tl": tl, "q": raw_text},
+                    headers={"User-Agent": "Mozilla/5.0 (Linux; Android 10; Mobile)"}
+                )
+                if res.status_code == 200:
+                    match = re.search(r'<div class="result-container">(.*?)</div>', res.text)
+                    if match:
+                        trans = match.group(1).strip()
+                        if trans:
+                            return trans
+        except Exception as e:
+            logger.debug(f"Google mobile translate failed: {e}")
+
+        # 4. Quaternary: Google GTX public endpoint
+        try:
+            url4 = "https://translate.googleapis.com/translate_a/single"
             async with httpx.AsyncClient(timeout=2.5) as client:
-                res = await client.get(url3, headers=headers)
+                res = await client.get(
+                    url4,
+                    params={"client": "gtx", "sl": sl, "tl": tl, "dt": "t", "q": raw_text},
+                    headers=headers
+                )
                 if res.status_code == 200:
                     data = res.json()
                     trans = "".join(part[0] for part in data[0] if part and part[0]).strip()
@@ -574,15 +752,26 @@ class TranslationService:
         if normalized in lang_dict:
             return lang_dict[normalized]
 
-        # 2. Try Online High-Accuracy Multi-Tier Translation
+        # 2. Try Online High-Accuracy Multi-Tier Translation first for complete sentences
         online_res = await self._online_translate(normalized, source_language, "en")
         if online_res:
             cleaned = remove_non_latin(online_res)
-            if cleaned:
+            if cleaned and len(cleaned) > 1:
                 return cleaned
-            return online_res
+            if online_res:
+                return online_res
 
-        # 3. Offline heuristic / phrase substitution fallback
+        # 3. Check Indic Symptom & Duration Parsers (Offline Fallback)
+        sym_res = parse_indic_symptom(normalized)
+        dur_res = parse_indic_duration(normalized)
+        if sym_res and dur_res:
+            return f"I have {sym_res.lower()} for {dur_res.lower()}"
+        if sym_res:
+            return sym_res
+        if dur_res:
+            return dur_res
+
+        # 5. Offline heuristic / phrase substitution fallback
         working = normalized
         for pattern, replacement in PHRASE_REPLACEMENTS:
             working = pattern.sub(replacement, working)
@@ -591,12 +780,23 @@ class TranslationService:
         if cleaned and len(cleaned) > 1:
             return cleaned
 
-        # 4. Check if digits exist in input (e.g. duration or scale rating)
+        # 6. Check if digits exist in input (e.g. duration or scale rating)
         digits = re.findall(r"\b\d+\b", normalized)
         if digits:
             return " ".join(digits)
 
-        # 5. Fallback: Return original input cleanly rather than fake "Patient reports acute symptoms"
+        # 7. Fallback: If text contains non-ASCII characters, do not leave it as raw regional
+        # text for clinical parsing; produce a safe descriptive English placeholder
+        if any(ord(c) >= 128 for c in stripped):
+            # Check if duration context
+            dur_check = parse_indic_duration(stripped)
+            if dur_check:
+                return dur_check
+            sym_check = parse_indic_symptom(stripped)
+            if sym_check:
+                return sym_check
+            return "Patient reports acute discomfort"
+
         return stripped
 
     async def translate_question(self, question_en: str, target_language: str, question_type: str = "") -> str:
