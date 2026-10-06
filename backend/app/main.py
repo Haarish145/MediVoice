@@ -1,4 +1,5 @@
 import logging
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -16,10 +17,14 @@ app = FastAPI(
 )
 
 # CORS Configuration
+# Note: HTTP spec forbids allow_credentials=True when allow_origins contains "*"
+_origins = settings.ALLOWED_ORIGINS
+_use_credentials = "*" not in _origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_origins=_origins,
+    allow_origin_regex=r"^https:\/\/.*\.vercel\.app$",
+    allow_credentials=_use_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -42,6 +47,7 @@ def root_health():
         "status": "ok",
         "service": settings.PROJECT_NAME,
         "version": settings.VERSION,
+        "commit": os.getenv("RENDER_GIT_COMMIT", "local")[:7] if os.getenv("RENDER_GIT_COMMIT") else "local",
         "demo_mode": settings.DEMO_MODE
     }
 

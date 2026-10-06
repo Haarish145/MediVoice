@@ -4,7 +4,12 @@ from typing import List, Union
 
 def parse_origins(val: Union[str, List[str], None]) -> List[str]:
     if not val:
-        return ["http://localhost:5173", "http://127.0.0.1:5173", "https://*.vercel.app", "*"]
+        return [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "https://medivoice-mauve.vercel.app",
+            "https://medivoice-pi.vercel.app",
+        ]
     if isinstance(val, list):
         return val
     val = str(val).strip()
